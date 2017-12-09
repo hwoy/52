@@ -1,12 +1,16 @@
 #include <iostream>
 #include <string>
 #include <iterator>
+#include <random>
+#include <chrono>
 
 
 #include "card.hpp"
 #include "player.hpp"
 #include "52io.hpp"
 #include "52.hpp"
+
+using namespace std::chrono;
 
 typedef Card card_t;
 typedef Deck<> deck_t;
@@ -18,7 +22,11 @@ typedef Game52<> game52_t;
 
 struct computer final : public player_t
 {
-	computer(unsigned int id,const char *name):player_t(id,name){}
+	std::mt19937 gen;
+	
+	
+	computer(unsigned int id,const char *name,std::size_t t=system_clock::to_time_t(system_clock::now())):
+	player_t(id,name),gen(t){}
 	virtual char bid(const group_t &deck) const
 	{
 		
@@ -85,9 +93,7 @@ static void showinfo(const game52_t &game52,const group_t &group,const deck_t &d
 	
 	std::cout << "BID: <" << BID << ">\n\n";
 	
-	std::cout << group
-	
-			  << "============================================================================\n";
+	std::cout << group;
 	
 }
 
