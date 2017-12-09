@@ -14,6 +14,9 @@
 using namespace std::chrono;
 
 
+struct Card
+{
+	
 struct Rank
 {
 	unsigned int id;
@@ -36,15 +39,12 @@ struct Suit
 	#endif
 	unsigned int priority;
 };
-
-struct Card
-{
 	unsigned int id;
 	Rank rank;
 	Suit suit;
 };
 
-template <typename C,typename Gen=std::mt19937>
+template <typename C=Card,typename Gen=std::mt19937>
 struct Deck: public std::list<C>
 {
 	Gen gen;
