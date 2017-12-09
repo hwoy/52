@@ -32,11 +32,13 @@ struct Rank
 struct Suit
 {
 	unsigned int id;
+	
 #if __cplusplus > 201402L
 	std::string_view name;
 #else
 	std::string name;
 #endif
+
 	unsigned int priority;
 };
 	unsigned int id;
