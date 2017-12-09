@@ -16,7 +16,7 @@
 template <typename P>
 struct Group;
 
-template <typename Deck=Deck<Card> >
+template <typename D=Deck<Card> >
 struct Player
 {
 	unsigned int id;
@@ -27,7 +27,7 @@ struct Player
 	std::string name;
 #endif
 	
-	Deck deck;
+	D deck;
 	
 	Player(unsigned int id,const char *name):id(id),name(name){}
 	
