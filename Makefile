@@ -4,7 +4,7 @@ BIN=52
 
 STD=c++14
 
-CXXFLAGS=--std=$(STD) -pedantic -Wall
+CXXFLAGS=-g --std=$(STD) -pedantic -Wall
 
 .PHONY: all clean
 
