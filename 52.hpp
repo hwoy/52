@@ -39,6 +39,7 @@ struct Game52
 	static void draw(G &group,D &deck,unsigned int index,unsigned int n=1,bool visible=true)
 	{
 		draw(group[index],deck,n,visible);
+		score(group);
 	}
 	
 	template <typename P>
@@ -49,11 +50,38 @@ struct Game52
 			deck.give(player.deck,1);
 			player.deck.back().visible=visible;
 		}
+		
+		score(player);
+	}
+	
+	static void score(G &group)
+	{
+		for(auto &i:group)
+			score(i);
+	}
+	
+	template <typename P>
+	static unsigned score(P &player)
+	{
+		unsigned int sum=0;
+		for(const auto &i:player.deck)
+			sum+=i.rank.value;
+		
+		return player.score=sum;
 	}
 	
 	void endphase(G &group,D &deck)
 	{
 		Game52<G,D>::giveall(group,deck);
+		
+		Game52<G,D>::money=0;
+		
+		for(auto &i:group)
+		{
+			i.score=0;
+			i.canbid=true;
+		}
+		
 	}
 
 	static void giveall(G &group,D &deck)

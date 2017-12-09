@@ -37,7 +37,7 @@ struct human final : public player_t
 };
 
 
-static void showinfo(const group_t &group,const deck_t &deck);
+static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck);
 
 template <std::size_t M,std::size_t N>
 static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)[N]);
@@ -66,7 +66,9 @@ int main()
 	
 	game52.draw(group,deck,0);
 	
-	showinfo(group,deck);
+	group[2].live=false;group[1].canbid=false;
+	
+	showinfo(game52,group,deck);
 	
 	game52.endphase(group,deck);
 	
@@ -75,11 +77,17 @@ int main()
 	return 0;
 }
 
-static void showinfo(const group_t &group,const deck_t &deck)
+static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck)
 {
-	std::cout << "Main Deck[" << deck.size() << "]\n\n";
+	std::cout << "\nMain Deck: <" << deck.size() << ">\n";
 	
-	std::cout << group;
+	std::cout << "Money: <" << game52.money << ">\n";
+	
+	std::cout << "BID: <" << BID << ">\n\n";
+	
+	std::cout << group
+	
+			  << "============================================================================\n";
 	
 }
 
