@@ -41,21 +41,6 @@ struct Group : public std::vector<P>
 	
 	Group(std::initializer_list<P> l):std::vector<P>(l){}
 	
-	template <typename D>
-	void giveall(D &deck)
-	{
-		for(auto &i:*this)
-			i.deck.giveall(deck);
-	}
-	
-	template <typename D>
-	void take(D &deck,unsigned int n)
-	{
-		for(unsigned int i=0;i<n;i++)
-			for(auto &i:*this)
-				i.deck.take(deck,1);
-	}
-	
 };
 
 #endif

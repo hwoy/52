@@ -6,12 +6,15 @@
 #include "card.hpp"
 #include "player.hpp"
 #include "52io.hpp"
+#include "52.hpp"
 
 typedef Card card_t;
 typedef Deck<> deck_t;
 
 typedef Player<> player_t;
 typedef Group<> group_t;
+
+typedef Game52<> game52_t;
 
 struct computer final : public player_t
 {
@@ -34,6 +37,12 @@ struct human final : public player_t
 };
 
 
+static void showinfo(const group_t &group,const deck_t &deck);
+
+template <std::size_t M,std::size_t N>
+static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)[N]);
+
+
 static const Card::Rank rank[]={ {0,"A",1} , {1,"2",2} , {2,"3",3} ,\
 					  {3,"4",4} , {4,"5",5} , {5,"6",6} ,\
 					  {6,"7",7} , {7,"8",8} , {8,"9",9} ,\
@@ -44,15 +53,50 @@ static const Card::Suit suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, 
 
 int main()
 {
-	deck_t deck(rank,suit);
+	deck_t deck=constructdeck(rank,suit);
 	
 	group_t group={computer(0,"Hwoy"),computer(1,"View"),computer(3,"Kung")};
 	
-	group.take(deck,5);
+	game52_t game52;
 	
-	std::cout << group ;
+
+	game52.shufflephase(deck);
+	
+	game52.drawphase(group,deck);
+	
+	showinfo(group,deck);
+	
+	game52.endphase(group,deck);
+	
 	
 	
 	return 0;
 }
+
+static void showinfo(const group_t &group,const deck_t &deck)
+{
+	std::cout << "Main Deck[" << deck.size() << "]\n\n";
+	
+	std::cout << group;
+	
+}
+
+
+template <std::size_t M,std::size_t N>
+static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)[N])
+{
+	deck_t deck;
+	
+	for(unsigned int i=0,c=0;i<N;i++)
+	{
+		for(unsigned int j=0;j<M;j++)
+		{
+			deck.push_back({c++,rank[j],suit[i]});
+		}
+	}
+		
+		return deck;
+}
+
+
 

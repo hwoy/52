@@ -52,21 +52,9 @@ struct Deck: public std::list<C>
 	Deck(std::time_t t=system_clock::to_time_t(system_clock::now())):
 	gen(t){}
 	
-	template <typename Rank,typename Suit,std::size_t M,std::size_t N>
-	Deck(Rank (&rank)[M], Suit (&suit)[N],std::time_t t=system_clock::to_time_t(system_clock::now())):
-	gen(t)
-	{
-		add(rank,suit);
-	}
+	Deck(const Deck<C,Gen> &deck,std::time_t t=system_clock::to_time_t(system_clock::now())):
+	std::list<C>(deck),gen(t){}
 	
-	template <typename Rank,typename Suit,std::size_t M,std::size_t N>
-	void add(Rank (&rank)[M],Suit (&suit)[N])
-	{
-		
-		for(unsigned int i=0,c=0;i<N;i++)
-			for(unsigned int j=0;j<M;j++)
-				Deck<C,Gen>::push_back({c++,rank[j],suit[i]});
-	}
 	
 	void shuffle(unsigned int loop=10240)
 	{
