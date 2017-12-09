@@ -2,9 +2,9 @@
 #define __CARD_H__
 
 #if __cplusplus > 201402L
-#include <string_view>
+	#include <string_view>
 #else
-#include <string>
+	#include <string>
 #endif
 
 #include <list>
@@ -20,11 +20,11 @@ struct Card
 struct Rank
 {
 	unsigned int id;
-	#if __cplusplus > 201402L
+#if __cplusplus > 201402L
 	std::string_view name;
-	#else
+#else
 	std::string name;
-	#endif
+#endif
 	unsigned int value;
 };
 
@@ -32,11 +32,11 @@ struct Rank
 struct Suit
 {
 	unsigned int id;
-	#if __cplusplus > 201402L
+#if __cplusplus > 201402L
 	std::string_view name;
-	#else
+#else
 	std::string name;
-	#endif
+#endif
 	unsigned int priority;
 };
 	unsigned int id;
