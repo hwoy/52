@@ -42,8 +42,14 @@ struct Suit
 	unsigned int priority;
 };
 	unsigned int id;
+	
 	Rank rank;
 	Suit suit;
+	
+	bool visible;
+	
+	Card(unsigned int id,const Rank &rank,const Suit &suit,bool visible=false):
+	id(id),rank(rank),suit(suit),visible(visible){}
 };
 
 template <typename C=Card,typename Gen=std::mt19937>

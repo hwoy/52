@@ -10,7 +10,7 @@
 template <typename T,typename U>
 std::basic_ostream<T,U> & operator<< (std::basic_ostream<T,U> &os, const Card &card)
 {
-	os << card.suit.name << "[" << card.rank.name << "] ";
+	os << ((card.visible)?card.suit.name:"X") << "[" << ((card.visible)?card.rank.name:"X") << "] ";
 	
 	return os;
 }

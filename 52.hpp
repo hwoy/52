@@ -43,15 +43,27 @@ struct Game52
 	static void giveall(G &group,D &deck)
 	{
 		for(auto &i:group)
+		{
+			for(auto &j:i.deck)
+			{
+				j.visible=false;
+			}
+			
 			i.deck.giveall(deck);
+		}
 	}
 	
 
 	static void take(G &group,D &deck,unsigned int n)
 	{
 		for(unsigned int i=0;i<n;i++)
+		{
 			for(auto &i:group)
+			{
 				i.deck.take(deck,1);
+				i.deck.back().visible=true;
+			}
+		}
 	}
 };
 

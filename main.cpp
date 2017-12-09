@@ -62,7 +62,7 @@ int main()
 
 	game52.shufflephase(deck);
 	
-	game52.drawphase(group,deck);
+	game52.drawphase(group,deck,2);
 	
 	showinfo(group,deck);
 	
