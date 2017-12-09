@@ -64,6 +64,8 @@ int main()
 	
 	game52.drawphase(group,deck,2);
 	
+	game52.draw(group,deck,0);
+	
 	showinfo(group,deck);
 	
 	game52.endphase(group,deck);

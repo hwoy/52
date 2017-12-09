@@ -36,9 +36,19 @@ struct Game52
 		Game52<G,D>::take(group,deck,n);
 	}
 	
-	static void draw(G &group,D &deck,unsigned int index,unsigned int n=1)
+	static void draw(G &group,D &deck,unsigned int index,unsigned int n=1,bool visible=true)
 	{
-		Game52<G,D>::take(group,deck,n);
+		draw(group[index],deck,n,visible);
+	}
+	
+	template <typename P>
+	static void draw(P &player,D &deck,unsigned int n=1,bool visible=true)
+	{
+		for(unsigned int i=0;i<n;i++)
+		{
+			deck.give(player.deck,1);
+			player.deck.back().visible=visible;
+		}
 	}
 	
 	void endphase(G &group,D &deck)
