@@ -15,11 +15,17 @@
 
 #include "card.hpp"
 #include "player.hpp"
+#include "52config.hpp"
 
 
 template <typename G=Group<>,typename D=Deck<> >
 struct Game52
 {
+	unsigned int money;
+	
+	Game52():money(0){}
+	
+	
 	void shufflephase(D &deck,unsigned int loop=10240)
 	{
 		deck.shuffle(loop);
@@ -30,7 +36,7 @@ struct Game52
 		Game52<G,D>::take(group,deck,n);
 	}
 	
-	static void draw(G &group,D &deck,unsigned int n=1)
+	static void draw(G &group,D &deck,unsigned int index,unsigned int n=1)
 	{
 		Game52<G,D>::take(group,deck,n);
 	}

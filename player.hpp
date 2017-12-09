@@ -12,6 +12,7 @@
 
 #include <initializer_list>
 #include "card.hpp"
+#include "52config.hpp"
 
 template <typename P>
 struct Group;
@@ -26,10 +27,17 @@ struct Player
 #else
 	std::string name;
 #endif
+
+	unsigned int money;
+	unsigned int score;
+	
+	bool canbid;
+	bool live;
 	
 	D deck;
 	
-	Player(unsigned int id,const char *name):id(id),name(name){}
+	Player(unsigned int id,const char *name,unsigned int money=MONEY):
+	id(id),name(name),money(money),score(0),canbid(true),live(true){}
 	
 	virtual char bid(const Group<Player> &deck) const {return '\0';}
 };

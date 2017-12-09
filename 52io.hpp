@@ -7,6 +7,7 @@
 #include "player.hpp"
 
 
+
 template <typename T,typename U>
 std::basic_ostream<T,U> & operator<< (std::basic_ostream<T,U> &os, const Card &card)
 {
@@ -26,7 +27,14 @@ std::basic_ostream<T,U> & operator<< (std::basic_ostream<T,U> &os, const Deck<C,
 template <typename T,typename U,typename D>
 std::basic_ostream<T,U> & operator<< (std::basic_ostream<T,U> &os, const Player<D> &player)
 {
-	os << player.name << " ===> " << player.deck;
+	os << player.name << "["<< player.money <<"]";
+	if(player.live)
+	{
+		os << " ===> " << player.deck << " <==== " << player.score << (!player.canbid?"*\n":"\n");
+	}
+	else{
+		os << "*\n";
+	}
 
 	return os;
 }
@@ -38,8 +46,6 @@ std::basic_ostream<T,U> & operator<< (std::basic_ostream<T,U> &os, const Group<P
 		os << i << std::endl;
 	return os;
 }
-
-
 
 
 
