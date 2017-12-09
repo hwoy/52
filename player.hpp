@@ -16,7 +16,7 @@
 template <typename P>
 struct Group;
 
-template <typename Deck>
+template <typename Deck=Deck<Card> >
 struct Player
 {
 	unsigned int id;
@@ -34,7 +34,7 @@ struct Player
 	virtual char bid(const Group<Player> &deck) const {return '\0';}
 };
 
-template <typename P>
+template <typename P=Player<Deck<Card> > >
 struct Group : public std::vector<P>
 {
 	Group(){}

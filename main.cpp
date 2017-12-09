@@ -10,8 +10,8 @@
 typedef Card card_t;
 typedef Deck<> deck_t;
 
-typedef Player<deck_t> player_t;
-typedef Group<player_t> group_t;
+typedef Player<> player_t;
+typedef Group<> group_t;
 
 struct computer final : public player_t
 {
