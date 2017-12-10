@@ -111,11 +111,22 @@ struct Game52
 		{
 				if(player.canbid && player.live)
 				{
+					unsigned int bid;
+					
 					player.deck.take(deck,1);
 					player.deck.back().visible=true;
 					
-					player.money-=BID;
-					money+=BID;
+					bid=player.money>=BID?BID:player.money;
+					
+					player.money-=bid;
+					money+=bid;
+					
+
+					if(!player.money) 
+					{
+						player.canbid=false;break;
+					}
+
 				}
 		}
 	}
@@ -130,7 +141,7 @@ struct Game52
 		
 		for(unsigned int i=0;i<group.size();i++)
 			if(group[i].live) vec.push_back(i);
-			
+		
 		
 		std::sort(vec.begin(),vec.end(),[&group](unsigned int a,unsigned int b)->bool{
 			return group[a].score > group[b].score;

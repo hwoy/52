@@ -48,17 +48,20 @@ struct computer final : public player_t
 	{
 		char ch;
 		
+		/*
 		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )].id==id &&
-			std::count_if(group.begin(),group.end(),[score=computer::score](const player_t &player)->bool { return player.live && player.score == score;  } )==1 )
+			std::count_if(group.begin(),group.end(),[score=computer::score](const player_t &player)->bool { return player.live && player.canbid && player.score == score;  } )==1 )
 				return 'n';
-		
+		*/	
 		std::uniform_int_distribution<unsigned int> dis(1,100);
 		
 		
 		if((SCORE-score)<=2) ch=(dis(gen)<=A?'y':'n');
 		else if((SCORE-score)<=5) ch=(dis(gen)<=B?'y':'n');
-		else if((SCORE-score)<=8) ch=(dis(gen)<=C?'y':'n');
-		else ch='n';
+		else if((SCORE-score)<=9) ch=(dis(gen)<=C?'y':'n');
+		
+		else ch='y';
+	
 		
 		return ch;
 	}
@@ -111,11 +114,34 @@ int main()
 
 	game52.shufflephase(deck);
 	
-	game52.drawphase(group,deck,2);
+	game52.drawphase(group,deck);
 	
-	game52.draw(group,deck,0);
+	
+	
+	for(auto &player:group)
+	{
+		std::cout << "dsdsda\n";
+		if(player.live && player.canbid)
+		{std::cout << "dbbbb\n";
+			char ch=player.bid(group);
+			
+			std::cout << player.name << ": " << ch << std::endl;
+			
+			if(ch=='y')
+			{
+				game52.draw(player,deck);
+			}
+				
+			else
+			{
+				player.canbid=false;
+			}
+		}
+	}
+	
 	
 	showinfo(game52,group,deck);
+	
 	
 	game52.endphase(group,deck);
 	
