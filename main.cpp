@@ -91,6 +91,8 @@ struct human final : public player_t
 
 static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck);
 
+static void showwinner(const player_t &player,unsigned int money);
+
 template <std::size_t M,std::size_t N>
 static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)[N]);
 
@@ -123,7 +125,9 @@ int main()
 	
 	game52.drawphase(group,deck);
 	
-	
+	std::vector<unsigned int> vec;
+	do
+	{
 	
 	for(auto &player:group)
 	{
@@ -136,23 +140,37 @@ int main()
 			if(ch=='y')
 			{
 				game52.draw(player,deck);
+				std::cout << player->name << " ===> " << player->deck.back() << std::endl;
+				
 			}
 				
 			else
 			{
 				player->canbid=false;
 			}
+			
+			showinfo(game52,group,deck);
 		}
 	}
 	
+	vec=game52.gameover(group);
 	
-	showinfo(game52,group,deck);
+	} while(!vec.size());
+	
+	auto &winner=*group[vec.front()];
+	showwinner(winner,game52.money);
+	winner.money+=game52.money;
 	
 	
 	game52.endphase(group,deck);
 	
 	
 	return 0;
+}
+
+static void showwinner(const player_t &player,unsigned int money)
+{
+	std::cout << "========= Winner is " << player.name << "[+" << money << "] =========\n";
 }
 
 static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck)

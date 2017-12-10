@@ -62,7 +62,11 @@ struct Game52
 		for(const auto &i:player->deck)
 			sum+=i.rank.value;
 		
-		return player->score=sum;
+		player->score=sum;
+		
+		if(player->score>SCORE) player->canbid=false;
+		
+		return sum;
 	}
 	
 	void endphase(G &group,D &deck)
@@ -136,11 +140,18 @@ struct Game52
 	{
 		std::vector<unsigned int> vec;
 		
+		for(unsigned int i=0;i<group.size();i++)
+			if(group[i]->live && group[i]->score==SCORE)
+			{
+				vec.push_back(i);
+				return vec;
+			}
+		
 		if(std::any_of(group.begin(),group.end(),[](const Player_ptr &player)->bool{return player->live && player->canbid;}))
 			return vec;
 		
 		for(unsigned int i=0;i<group.size();i++)
-			if(group[i]->live) vec.push_back(i);
+			if(group[i]->live && group[i]->score<=SCORE) vec.push_back(i);
 		
 		
 		std::sort(vec.begin(),vec.end(),[&group](unsigned int a,unsigned int b)->bool{
