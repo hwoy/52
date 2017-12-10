@@ -40,7 +40,7 @@ struct Player
 	
 	D deck;
 	
-	Player(unsigned int id,const char *name,unsigned int money=MONEY):
+	Player(unsigned int id,const std::string &name,unsigned int money=MONEY):
 	id(id),name(name),money(money),score(0),canbid(true),live(true),A(0),B(0),C(0){}
 	
 	virtual char bid(const Group<std::shared_ptr<Player<Deck<Card> > >> &deck) const {return '\0';}

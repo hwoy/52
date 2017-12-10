@@ -5,8 +5,9 @@
 
 #define SCORE 52
 
-#define MONEY 500
+#define MONEY 100
 #define BID 10
+#define MAXPLAYER 6
 
 #define _A 5
 #define _B 25

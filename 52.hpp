@@ -172,12 +172,12 @@ struct Game52
 	{
 		unsigned int j=0,id=0;
 		
-		for(const auto &player:group)
+		for(unsigned int i=0;i<group.size();i++)
 		{
-			if(player->live)
+			if(group[i]->live)
 			{
 				j++;
-				id=player->id;
+				id=i;
 			}
 		}
 		
