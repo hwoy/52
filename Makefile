@@ -2,7 +2,7 @@ CC=gcc
 CXX=g++
 BIN=52
 
-STD=c++14
+STD=c++11
 
 CXXFLAGS=-g --std=$(STD) -pedantic -Wall
 
