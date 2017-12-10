@@ -5,39 +5,59 @@
 #include <chrono>
 
 
+
 #include "card.hpp"
 #include "player.hpp"
-#include "52io.hpp"
 #include "52.hpp"
+#include "52io.hpp"
+
+#include "52config.hpp"
+#include "52type.hpp"
 
 using namespace std::chrono;
 
-typedef Card card_t;
-typedef Deck<> deck_t;
-
-typedef Player<> player_t;
-typedef Group<> group_t;
-
-typedef Game52<> game52_t;
-
 struct computer final : public player_t
 {
-	std::mt19937 gen;
+	static std::mt19937 gen;
 	
 	
-	computer(unsigned int id,const char *name,std::size_t t=system_clock::to_time_t(system_clock::now())):
-	player_t(id,name),gen(t){}
-	virtual char bid(const group_t &deck) const
+	computer(unsigned int id,const char *name):
+	player_t(id,name)
 	{
-		
-		return 'y';
+		A = random(_A-5,_A+5);
+		B = random(_B-10,_A+20);
+		C = random(_C-10,_C+20);
 	}
+	virtual char bid(const group_t &deck)
+	{
+		char ch;
+		
+		std::uniform_int_distribution<unsigned int> dis(1,100);
+		
+		if((SCORE-score)<=2) ch=(dis(gen)<=A?'y':'n');
+		else if((SCORE-score)<=5) ch=(dis(gen)<=B?'y':'n');
+		else if((SCORE-score)<=8) ch=(dis(gen)<=C?'y':'n');
+		else ch='n';
+		
+		return ch;
+	}
+	
+	private:
+	unsigned int random(unsigned int a,unsigned int b)
+	{
+		std::uniform_int_distribution<> dis;
+		
+		return a+(dis(gen)%(b-a+1));
+	}
+
 };
+
+std::mt19937 computer::gen(system_clock::to_time_t(system_clock::now()));
 
 struct human final : public player_t
 {
 	human(unsigned int id,const char *name):player_t(id,name){}
-	virtual char bid(const group_t &deck) const
+	virtual char bid(const group_t &deck)
 	{
 		
 		return 'y';
@@ -63,7 +83,7 @@ int main()
 {
 	deck_t deck=constructdeck(rank,suit);
 	
-	group_t group={computer(0,"Hwoy"),computer(1,"View"),computer(3,"Kung")};
+	group_t group={computer(0,"Hwoy"),computer(1,"View"),computer(3,"Kung"),human(4,"Ding")};
 	
 	game52_t game52;
 	
@@ -73,8 +93,6 @@ int main()
 	game52.drawphase(group,deck,2);
 	
 	game52.draw(group,deck,0);
-	
-	group[2].live=false;group[1].canbid=false;
 	
 	showinfo(game52,group,deck);
 	

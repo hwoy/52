@@ -34,12 +34,16 @@ struct Player
 	bool canbid;
 	bool live;
 	
+	unsigned int A;
+	unsigned int B;
+	unsigned int C;
+	
 	D deck;
 	
 	Player(unsigned int id,const char *name,unsigned int money=MONEY):
-	id(id),name(name),money(money),score(0),canbid(true),live(true){}
+	id(id),name(name),money(money),score(0),canbid(true),live(true),A(0),B(0),C(0){}
 	
-	virtual char bid(const Group<Player> &deck) const {return '\0';}
+	virtual char bid(const Group<Player> &deck) {return '\0';}
 };
 
 template <typename P=Player<Deck<Card> > >

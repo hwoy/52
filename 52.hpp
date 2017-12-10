@@ -12,10 +12,8 @@
 
 #include <initializer_list>
 
-
 #include "card.hpp"
 #include "player.hpp"
-#include "52config.hpp"
 
 
 template <typename G=Group<>,typename D=Deck<> >
@@ -31,27 +29,22 @@ struct Game52
 		deck.shuffle(loop);
 	}
 	
-	static void drawphase(G &group,D &deck,unsigned int n=1)
+	void drawphase(G &group,D &deck,unsigned int n=1)
 	{
 		Game52<G,D>::take(group,deck,n);
+
 	}
 	
-	static void draw(G &group,D &deck,unsigned int index,unsigned int n=1,bool visible=true)
+	void draw(G &group,D &deck,unsigned int index,unsigned int n=1)
 	{
-		draw(group[index],deck,n,visible);
-		score(group);
+		draw(group[index],deck,n);
 	}
 	
 	template <typename P>
-	static void draw(P &player,D &deck,unsigned int n=1,bool visible=true)
+	void draw(P &player,D &deck,unsigned int n=1)
 	{
-		for(unsigned int i=0;i<n;i++)
-		{
-			deck.give(player.deck,1);
-			player.deck.back().visible=visible;
-		}
-		
-		score(player);
+		takep(player,deck,n);
+
 	}
 	
 	static void score(G &group)
@@ -98,15 +91,30 @@ struct Game52
 	}
 	
 
-	static void take(G &group,D &deck,unsigned int n)
+	void take(G &group,D &deck,unsigned int n)
 	{
 		for(unsigned int i=0;i<n;i++)
 		{
 			for(auto &i:group)
 			{
-				i.deck.take(deck,1);
-				i.deck.back().visible=true;
+				takep(i,deck,1);
 			}
+		}
+	}
+	
+	template <typename P>
+	void takep(P &player,D &deck,unsigned int n)
+	{
+			for(unsigned int i=0;i<n;i++)
+		{
+				if(player.canbid && player.live)
+				{
+					player.deck.take(deck,1);
+					player.deck.back().visible=true;
+					
+					player.money-=BID;
+					money+=BID;
+				}
 		}
 	}
 };
