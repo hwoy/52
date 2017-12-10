@@ -72,7 +72,7 @@ struct computer final : public player_t
 	}
 	
 	private:
-	unsigned int random(unsigned int a,unsigned int b)
+	static unsigned int random(unsigned int a,unsigned int b)
 	{
 		std::uniform_int_distribution<> dis;
 		
