@@ -44,7 +44,7 @@ struct computer final : public player_t
 		B = random(_B-10,_A+20);
 		C = random(_C-10,_C+20);
 	}
-	virtual char bid(const group_t &group)
+	virtual char bid(const group_t &group) const 
 	{
 		char ch;
 		
@@ -78,7 +78,7 @@ std::mt19937 computer::gen(system_clock::to_time_t(system_clock::now()));
 struct human final : public player_t
 {
 	human(unsigned int id,const char *name):player_t(id,name){}
-	virtual char bid(const group_t &deck)
+	virtual char bid(const group_t &deck) const
 	{
 		
 		return 'y';
