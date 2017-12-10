@@ -37,8 +37,8 @@ struct computer final : public player_t
 	static std::mt19937 gen;
 	
 	
-	computer(unsigned int id,const char *name):
-	player_t(id,name)
+	computer(unsigned int id,const char *name,unsigned int money)
+	:player_t(id,name,money)
 	{
 		A = random(_A-2,_A+2);
 		B = random(_B-5,_B+5);
@@ -85,7 +85,7 @@ std::mt19937 computer::gen(system_clock::to_time_t(system_clock::now()));
 
 struct human final : public player_t
 {
-	human(unsigned int id,const char *name):player_t(id,name){}
+	human(unsigned int id,const char *name,unsigned int money):player_t(id,name,money){}
 	virtual char bid(const group_t &deck) const
 	{
 		
@@ -124,22 +124,24 @@ static const Card::Suit suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, 
 
 int main()
 {
+	unsigned int bid=BID,money=MONEY;
+	
 	bool iswin,nonoecanwin,idquit=false;
 	unsigned int winindex;
 	
 	std::vector<unsigned int> vec;
 	
-	game52_t game52;
+	game52_t game52(bid);
 	
 	deck_t deck=constructdeck(rank,suit);
 	
 	group_t group;
 	
-	group.push_back(std::shared_ptr<player_t>(new computer(0,"Hwoy")));
-	group.push_back(std::shared_ptr<player_t>(new computer(1,"View")));
-	group.push_back(std::shared_ptr<player_t>(new computer(2,"Kung")));
-	group.push_back(std::shared_ptr<player_t>(new computer(3,"Ding")));
-	group.push_back(std::shared_ptr<player_t>(new computer(4,"Lekk")));
+	group.push_back(std::shared_ptr<player_t>(new computer(0,"Hwoy",money)));
+	group.push_back(std::shared_ptr<player_t>(new computer(1,"View",money)));
+	group.push_back(std::shared_ptr<player_t>(new computer(2,"Kung",money)));
+	group.push_back(std::shared_ptr<player_t>(new computer(3,"Ding",money)));
+	group.push_back(std::shared_ptr<player_t>(new computer(4,"Lekk",money)));
 
 
 	
@@ -156,18 +158,18 @@ int main()
 		do
 		{
 	
-		for(auto &player:group)
+		for(auto &playerPtr:group)
 			{
-				if(player->live && player->canbid && player->money>=BID)
+				if(playerPtr->live && playerPtr->canbid && playerPtr->money>=bid)
 				{
-					char ch=player->bid(group);
+					char ch=playerPtr->bid(group);
 			
-					std::cout << player->name << ": " << ch << std::endl;
+					std::cout << playerPtr->name << ": " << ch << std::endl;
 			
 					if(ch==IDYES)
 					{
-						game52.draw(player,deck);
-						std::cout << player->name << " ===> " << player->deck.back() << std::endl;
+						game52.draw(*playerPtr,deck);
+						std::cout << playerPtr->name << " ===> " << playerPtr->deck.back() << std::endl;
 				
 					}
 					
@@ -175,7 +177,7 @@ int main()
 				
 					else
 					{
-						player->canbid=false;
+						playerPtr->canbid=false;
 					}
 
 					showinfo(game52,group,deck);
@@ -198,11 +200,11 @@ int main()
 	}
 	else{
 		std::cout << "\n========= All fuckin win!! =========\n";
-		for(auto &player:group)
-			if(player->live)
+		for(auto &playerPtr:group)
+			if(playerPtr->live)
 			{
-				showwinner(*player,player->deck.size()*BID);
-				player->money+=(player->deck.size()*BID);
+				showwinner(*playerPtr,playerPtr->deck.size()*bid);
+				playerPtr->money+=(playerPtr->deck.size()*bid);
 			}
 		}
 		
@@ -234,7 +236,7 @@ static void showinfo(const game52_t &game52,const group_t &group,const deck_t &d
 	
 	std::cout << "Money: <" << game52.money << ">\n";
 	
-	std::cout << "BID: <" << BID << ">\n\n";
+	std::cout << "BID: <" << game52.bid << ">\n\n";
 	
 	std::cout << group;
 	

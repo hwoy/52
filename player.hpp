@@ -50,7 +50,8 @@ struct Player
 template <typename P=std::shared_ptr<Player<Deck<Card> > > >
 struct Group : public std::vector<P>
 {
-	typedef P Player_t;
+	typedef P Player_ptr;
+	typedef typename P::element_type Player_t;
 	
 };
 

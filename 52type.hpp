@@ -14,7 +14,7 @@ typedef Player<> player_t;
 
 typedef Group<> group_t;
 
-typedef group_t::Player_t player_ptr;
+typedef group_t::Player_ptr player_ptr;
 
 typedef Game52<> game52_t;
 

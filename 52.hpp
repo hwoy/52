@@ -19,11 +19,13 @@
 template <typename G=Group<>,typename D=Deck<> >
 struct Game52
 {
-	typedef typename G::Player_t Player_ptr;
+	typedef typename G::Player_ptr Player_ptr;
+	typedef typename G::Player_t Player_t;
 	
+	unsigned int bid;
 	unsigned int money;
 	
-	Game52():money(0){}
+	Game52(unsigned int bid):bid(bid),money(0){}
 	
 	
 	void shufflephase(D &deck,unsigned int loop=10240)
@@ -40,10 +42,10 @@ struct Game52
 	
 	void draw(G &group,D &deck,unsigned int index,unsigned int n=1)
 	{
-		Game52<G,D>::draw(group[index],deck,n);
+		Game52<G,D>::draw(*group[index],deck,n);
 	}
 	
-	void draw(Player_ptr &player,D &deck,unsigned int n=1)
+	void draw(Player_t &player,D &deck,unsigned int n=1)
 	{
 		Game52<G,D>::takep(player,deck,n);
 		Game52<G,D>::score(player);
@@ -52,19 +54,19 @@ struct Game52
 	
 	static void score(G &group)
 	{
-		for(auto &i:group)
-			Game52<G,D>::score(i);
+		for(auto &playerPtr:group)
+			Game52<G,D>::score(*playerPtr);
 	}
 	
-	static unsigned score(Player_ptr &player)
+	static unsigned score(Player_t &player)
 	{
 		unsigned int sum=0;
-		for(const auto &i:player->deck)
+		for(const auto &i:player.deck)
 			sum+=i.rank.value;
 		
-		player->score=sum;
+		player.score=sum;
 		
-		if(player->score>SCORE) player->canbid=false;
+		if(player.score>SCORE) player.canbid=false;
 		
 		return sum;
 	}
@@ -75,24 +77,24 @@ struct Game52
 		
 		Game52<G,D>::money=0;
 		
-		for(auto &player:group)
+		for(auto &playerPtr:group)
 		{
-			player->score=0;
-			player->canbid=true;
+			playerPtr->score=0;
+			playerPtr->canbid=true;
 		}
 		
 	}
 
 	static void giveall(G &group,D &deck)
 	{
-		for(auto &player:group)
+		for(auto &playerPtr:group)
 		{
-			for(auto &j:player->deck)
+			for(auto &j:playerPtr->deck)
 			{
 				j.visible=false;
 			}
 			
-			player->deck.giveall(deck);
+			playerPtr->deck.giveall(deck);
 		}
 	}
 	
@@ -101,31 +103,31 @@ struct Game52
 	{
 		for(unsigned int i=0;i<n;i++)
 		{
-			for(auto &i:group)
+			for(auto &playerPtr:group)
 			{
-				takep(i,deck,1);
+				takep(*playerPtr,deck,1);
 			}
 		}
 	}
 	
 
-	void takep(Player_ptr &player,D &deck,unsigned int n)
+	void takep(Player_t &player,D &deck,unsigned int n)
 	{
 			for(unsigned int i=0;i<n;i++)
 		{
-				if(player->canbid && player->live)
+				if(player.canbid && player.live)
 				{			
-					player->deck.take(deck,1);
-					player->deck.back().visible=true;
+					player.deck.take(deck,1);
+					player.deck.back().visible=true;
 					
 					
-					player->money-=BID;
-					money+=BID;
+					player.money-=Game52<G,D>::bid;
+					money+=Game52<G,D>::bid;
 					
 
-					if(player->money<BID) 
+					if(player.money<Game52<G,D>::bid) 
 					{
-						player->canbid=false;break;
+						player.canbid=false;break;
 					}
 
 				}
@@ -145,7 +147,7 @@ struct Game52
 			}
 		
 		
-		if(std::any_of(group.begin(),group.end(),[](const Player_ptr &player)->bool{return player->live && player->canbid;}))
+		if(std::any_of(group.begin(),group.end(),[](const Player_ptr &playerPtr)->bool{return playerPtr->live && playerPtr->canbid;}))
 			return std::pair<int,std::vector<unsigned int>>(false,vec);
 		
 		for(unsigned int i=0;i<group.size();i++)
@@ -183,15 +185,15 @@ struct Game52
 	}
 	
 	
-	static void update(G &group)
+	void update(G &group)
 	{
-		for(auto &player:group)
-			update(player);
+		for(auto &playerPtr:group)
+			update(*playerPtr);
 	}
 	
-	static void update(Player_ptr &player)
+	void update(Player_t &player)
 	{
-		if(player->money<BID) player->live=false;
+		if(player.money < Game52<G,D>::bid) player.live=false;
 	}
 };
 
