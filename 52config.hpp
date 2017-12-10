@@ -3,12 +3,12 @@
 
 #define SCORE 52
 
-#define MONEY 100
+#define MONEY 1000
 #define BID 10
 
 #define _A 15
 #define _B 38
-#define _C 62
+#define _C 69
 
 
 

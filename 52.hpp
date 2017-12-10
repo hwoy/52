@@ -133,7 +133,7 @@ struct Game52
 	}
 	
 		
-	static std::vector<unsigned int> gameover(const G &group)
+	static std::pair<bool,std::vector<unsigned int>> gameover(const G &group)
 	{
 		std::vector<unsigned int> vec;
 		
@@ -141,23 +141,28 @@ struct Game52
 			if(group[i]->live && group[i]->score==SCORE)
 			{
 				vec.push_back(i);
-				return vec;
+				return std::pair<int,std::vector<unsigned int>>(false,vec);
 			}
 		
+		
 		if(std::any_of(group.begin(),group.end(),[](const Player_ptr &player)->bool{return player->live && player->canbid;}))
-			return vec;
+			return std::pair<int,std::vector<unsigned int>>(false,vec);
 		
 		for(unsigned int i=0;i<group.size();i++)
 			if(group[i]->live && group[i]->score<=SCORE) vec.push_back(i);
+		
+		if(!vec.size())
+			return std::pair<bool,std::vector<unsigned int>>(true,vec);
 		
 		
 		std::sort(vec.begin(),vec.end(),[&group](unsigned int a,unsigned int b)->bool{
 			return group[a]->score > group[b]->score;
 		});
 		
+		
 		while(group[vec.front()]->score>group[vec.back()]->score) vec.pop_back();
 		
-		return vec;
+		return std::pair<bool,std::vector<unsigned int>>(false,vec);
 	}
 	
 	

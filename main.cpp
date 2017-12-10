@@ -50,7 +50,7 @@ struct computer final : public player_t
 		
 
 		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )]->id==id &&
-			std::count_if(group.begin(),group.end(),[](const player_ptr &player)->bool { return player->live && player->canbid;  } )==1 )
+			std::count_if(group.begin(),group.end(),[&score=score](const player_ptr &player)->bool { return player->live && player->score==score;  } )==1 )
 				return 'n';
 
 		std::uniform_int_distribution<unsigned int> dis(1,100);
@@ -109,7 +109,7 @@ static const Card::Suit suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, 
 
 int main()
 {
-	bool iswin;
+	bool iswin,nonoecanwin;
 	unsigned int winindex;
 	
 	deck_t deck=constructdeck(rank,suit);
@@ -160,20 +160,20 @@ int main()
 			showinfo(game52,group,deck);
 		}
 	}
+
 	
-	vec=game52.gameover(group);
+	std::tie(nonoecanwin,vec)=game52.gameover(group);
 	
-	} while(!vec.size());
+	} while(!nonoecanwin && !vec.size());
 	
-	auto &winner=*group[vec.front()];
-	
-	if(winner.score<=SCORE)
+	if(!nonoecanwin && group[vec.front()]->score<=SCORE)
 	{
-	showwinner(winner,game52.money);
-	winner.money+=game52.money;
+		auto &winner=*group[vec.front()];
+		showwinner(winner,game52.money);
+		winner.money+=game52.money;
 	}
 	else{
-		std::cout << "========= All fuckin win!! =========\n";
+		std::cout << "\n========= All fuckin win!! =========\n";
 		for(auto &player:group)
 			if(player->live)
 				player->money+=(player->deck.size()*BID);
@@ -192,7 +192,7 @@ int main()
 
 static void showwinner(const player_t &player,unsigned int money)
 {
-	std::cout << "========= Winner is " << player.name << "[+" << money << "] =========\n";
+	std::cout << "\n========= Winner is " << player.name << "[+" << money << "] =========\n";
 }
 
 static void showwinnerofthematch(const player_t &player)
