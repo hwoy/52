@@ -42,7 +42,7 @@ struct computer final : public player_t
 	{
 		A = random(_A-10,_A+5);
 		B = random(_B-10,_A+20);
-		C = random(_C-10,_C+20);
+		C = random(_C-5,_C+25);
 	}
 	virtual char bid(const group_t &group) const 
 	{
