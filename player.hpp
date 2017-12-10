@@ -20,6 +20,7 @@ struct Group;
 template <typename D=Deck<Card> >
 struct Player
 {
+	typedef D Deck_t;
 	unsigned int id;
 	
 #if __cplusplus > 201402L
@@ -49,6 +50,7 @@ struct Player
 template <typename P=Player<Deck<Card> > >
 struct Group : public std::vector<P>
 {
+	typedef P Player_t;
 	Group(){}
 	
 	Group(std::initializer_list<P> l):std::vector<P>(l){}

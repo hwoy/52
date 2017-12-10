@@ -55,6 +55,8 @@ struct Suit
 template <typename C=Card,typename Gen=std::mt19937>
 struct Deck: public std::list<C>
 {
+	
+	typedef C Card_t;
 	Gen gen;
 	
 	Deck(std::time_t t=system_clock::to_time_t(system_clock::now())):

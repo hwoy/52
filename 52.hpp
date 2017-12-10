@@ -2,7 +2,7 @@
 #define __52_H__
 
 
-#include <vector>
+#include <utility>
 
 #if __cplusplus > 201402L
 	#include <string_view>
@@ -10,7 +10,7 @@
 	#include <string>
 #endif
 
-#include <initializer_list>
+#include <algorithm>
 
 #include "card.hpp"
 #include "player.hpp"
@@ -19,6 +19,8 @@
 template <typename G=Group<>,typename D=Deck<> >
 struct Game52
 {
+	typedef typename G::Player_t Player_t;
+	
 	unsigned int money;
 	
 	Game52():money(0){}
@@ -55,8 +57,7 @@ struct Game52
 			Game52<G,D>::score(i);
 	}
 	
-	template <typename P>
-	static unsigned score(P &player)
+	static unsigned score(Player_t &player)
 	{
 		unsigned int sum=0;
 		for(const auto &i:player.deck)
@@ -104,8 +105,8 @@ struct Game52
 		}
 	}
 	
-	template <typename P>
-	void takep(P &player,D &deck,unsigned int n)
+
+	void takep(Player_t &player,D &deck,unsigned int n)
 	{
 			for(unsigned int i=0;i<n;i++)
 		{
@@ -118,6 +119,33 @@ struct Game52
 					money+=BID;
 				}
 		}
+	}
+	
+	static std::pair<bool,unsigned int> gameover(const G &group)
+	{
+		
+		if(std::count_if(group.begin(),group.end(),[](const Player_t &player)->bool{return player.canbid;}))
+			return std::make_pair(false,-1U);
+		
+		
+		return std::make_pair(false,0);
+	}
+	
+	
+	static std::pair<bool,unsigned int> matchover(const G &group)
+	{
+		unsigned int j=0,id=0;
+		
+		for(const auto &i:group)
+		{
+			if(i.live)
+			{
+				j++;
+				id=i.id;
+			}
+		}
+		
+		return std::make_pair(j==1,id);
 	}
 };
 
