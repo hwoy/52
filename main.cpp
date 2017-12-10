@@ -126,7 +126,7 @@ static const Card::Suit suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, 
 
 static const char* option[] = { "-b:", "-m:", "-h:", "-c:", "-H" };
 
-static const char* option_des[] = { "-b:number <Bid money>", "-m:money <Money>", "-h:name <Human>", "-c:name <Computer>", "Help" };
+static const char* option_des[] = { "-b:money <Bid money>", "-m:money <Money>", "-h:name <Human>", "-c:name <Computer>", "Help" };
 
 enum optid : unsigned int 
 { 	opt_b,
