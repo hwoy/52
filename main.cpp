@@ -50,7 +50,7 @@ struct computer final : public player_t
 		
 
 		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )]->id==id &&
-			std::count_if(group.begin(),group.end(),[&score=score](const player_ptr &player)->bool { return player->live && player->score==score;  } )==1 )
+			std::count_if(group.begin(),group.end(),[](const player_ptr &player)->bool { return player->live && player->canbid;  } )==1 )
 				return 'n';
 
 		std::uniform_int_distribution<unsigned int> dis(1,100);
@@ -130,41 +130,46 @@ int main()
 	
 	game52.drawphase(group,deck);
 	
+	showinfo(game52,group,deck);
+	
 	std::vector<unsigned int> vec;
 	
 	do{
+		
+		bool outloop=false;
 	
-	do
-	{
-	
-	for(auto &player:group)
-	{
-		if(player->live && player->canbid && player->money>=BID)
+		do
 		{
-			char ch=player->bid(group);
-			
-			std::cout << player->name << ": " << ch << std::endl;
-			
-			if(ch=='y')
+	
+		for(auto &player:group)
 			{
-				game52.draw(player,deck);
-				std::cout << player->name << " ===> " << player->deck.back() << std::endl;
-				
-			}
-				
-			else
-			{
-				player->canbid=false;
-			}
+				if(player->live && player->canbid && player->money>=BID)
+				{
+					char ch=player->bid(group);
 			
-			showinfo(game52,group,deck);
-		}
-	}
+					std::cout << player->name << ": " << ch << std::endl;
+			
+					if(ch=='y')
+					{
+						game52.draw(player,deck);
+						std::cout << player->name << " ===> " << player->deck.back() << std::endl;
+				
+					}
+				
+					else
+					{
+						player->canbid=false;
+					}
 
-	
-	std::tie(nonoecanwin,vec)=game52.gameover(group);
-	
-	} while(!nonoecanwin && !vec.size());
+					showinfo(game52,group,deck);
+			
+					std::tie(nonoecanwin,vec)=game52.gameover(group);
+			
+					if(!(!nonoecanwin && !vec.size())) { outloop=true;break; }
+				}
+			}
+
+		} while(!outloop);
 	
 	if(!nonoecanwin && group[vec.front()]->score<=SCORE)
 	{
@@ -178,6 +183,7 @@ int main()
 			if(player->live)
 				player->money+=(player->deck.size()*BID);
 		}
+		
 	game52.update(group);
 	game52.endphase(group,deck);
 	
