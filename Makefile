@@ -10,11 +10,14 @@ CXXFLAGS=-g --std=$(STD) -pedantic -Wall
 
 all: $(BIN)
 
+clean:
+	del *.o *.exe $(BIN)
+
 $(BIN): main.o
 	$(CXX) -o $(BIN) main.o
 
-main.o: main.cpp card.hpp player.hpp 52io.hpp
+main.o: main.cpp card.hpp player.hpp 52config.hpp 52.hpp 52io.hpp \
+ 52type.hpp
 
-clean:
-	del *.o *.exe $(BIN)
+
 
