@@ -32,25 +32,27 @@ struct Game52
 	void drawphase(G &group,D &deck,unsigned int n=1)
 	{
 		Game52<G,D>::take(group,deck,n);
+		Game52<G,D>::score(group);
 
 	}
 	
 	void draw(G &group,D &deck,unsigned int index,unsigned int n=1)
 	{
-		draw(group[index],deck,n);
+		Game52<G,D>::draw(group[index],deck,n);
 	}
 	
 	template <typename P>
 	void draw(P &player,D &deck,unsigned int n=1)
 	{
-		takep(player,deck,n);
+		Game52<G,D>::takep(player,deck,n);
+		Game52<G,D>::score(player);
 
 	}
 	
 	static void score(G &group)
 	{
 		for(auto &i:group)
-			score(i);
+			Game52<G,D>::score(i);
 	}
 	
 	template <typename P>

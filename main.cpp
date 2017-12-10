@@ -3,6 +3,7 @@
 #include <iterator>
 #include <random>
 #include <chrono>
+#include <algorithm>
 
 
 
@@ -18,6 +19,21 @@ using namespace std::chrono;
 
 struct computer final : public player_t
 {
+
+		template <typename T>
+		static unsigned int find (const group_t &group, const T &t)
+		{
+			unsigned int index;
+			for(index=0;index<group.size();index++)
+				if(group[index].live) break;
+			
+			for(unsigned int i=index+1;i<group.size();i++)
+				if( group[i].live && t(group[i].score , group[index].score)) index=i;
+			
+			return index;
+		}
+
+	
 	static std::mt19937 gen;
 	
 	
@@ -28,11 +44,16 @@ struct computer final : public player_t
 		B = random(_B-10,_A+20);
 		C = random(_C-10,_C+20);
 	}
-	virtual char bid(const group_t &deck)
+	virtual char bid(const group_t &group)
 	{
 		char ch;
 		
+		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )].id==id &&
+		std::count_if(group.begin(),group.end(),[score=computer::score](const player_t &player)->bool { return player.live && player.score == score;  } )==1 )
+			return 'n';
+		
 		std::uniform_int_distribution<unsigned int> dis(1,100);
+		
 		
 		if((SCORE-score)<=2) ch=(dis(gen)<=A?'y':'n');
 		else if((SCORE-score)<=5) ch=(dis(gen)<=B?'y':'n');
