@@ -40,7 +40,7 @@ struct computer final : public player_t
 	computer(unsigned int id,const char *name):
 	player_t(id,name)
 	{
-		A = random(_A-5,_A+5);
+		A = random(_A-10,_A+5);
 		B = random(_B-10,_A+20);
 		C = random(_C-10,_C+20);
 	}
@@ -49,8 +49,8 @@ struct computer final : public player_t
 		char ch;
 		
 		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )].id==id &&
-		std::count_if(group.begin(),group.end(),[score=computer::score](const player_t &player)->bool { return player.live && player.score == score;  } )==1 )
-			return 'n';
+			std::count_if(group.begin(),group.end(),[score=computer::score](const player_t &player)->bool { return player.live && player.score == score;  } )==1 )
+				return 'n';
 		
 		std::uniform_int_distribution<unsigned int> dis(1,100);
 		
