@@ -93,6 +93,8 @@ static void showinfo(const game52_t &game52,const group_t &group,const deck_t &d
 
 static void showwinner(const player_t &player,unsigned int money);
 
+static void showwinnerofthematch(const player_t &player);
+
 template <std::size_t M,std::size_t N>
 static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)[N]);
 
@@ -107,6 +109,9 @@ static const Card::Suit suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, 
 
 int main()
 {
+	bool iswin;
+	unsigned int winindex;
+	
 	deck_t deck=constructdeck(rank,suit);
 	
 	group_t group;
@@ -126,12 +131,15 @@ int main()
 	game52.drawphase(group,deck);
 	
 	std::vector<unsigned int> vec;
+	
+	do{
+	
 	do
 	{
 	
 	for(auto &player:group)
 	{
-		if(player->live && player->canbid)
+		if(player->live && player->canbid && player->money>=BID)
 		{
 			char ch=player->bid(group);
 			
@@ -158,11 +166,25 @@ int main()
 	} while(!vec.size());
 	
 	auto &winner=*group[vec.front()];
+	
+	if(winner.score<=SCORE)
+	{
 	showwinner(winner,game52.money);
 	winner.money+=game52.money;
-	
-	
+	}
+	else{
+		std::cout << "========= All fuckin win!! =========\n";
+		for(auto &player:group)
+			if(player->live)
+				player->money+=(player->deck.size()*BID);
+		}
+	game52.update(group);
 	game52.endphase(group,deck);
+	
+	std::tie(iswin,winindex)=game52.matchover(group);
+	}while(!iswin);
+	
+	showwinnerofthematch(*group[winindex]);
 	
 	
 	return 0;
@@ -171,6 +193,11 @@ int main()
 static void showwinner(const player_t &player,unsigned int money)
 {
 	std::cout << "========= Winner is " << player.name << "[+" << money << "] =========\n";
+}
+
+static void showwinnerofthematch(const player_t &player)
+{
+	std::cout << "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Winner of the match is " << player.name << "[" << player.money << "] $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
 }
 
 static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck)

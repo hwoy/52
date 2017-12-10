@@ -114,19 +114,16 @@ struct Game52
 			for(unsigned int i=0;i<n;i++)
 		{
 				if(player->canbid && player->live)
-				{
-					unsigned int bid;
-					
+				{			
 					player->deck.take(deck,1);
 					player->deck.back().visible=true;
 					
-					bid=player->money>=BID?BID:player->money;
 					
-					player->money-=bid;
-					money+=bid;
+					player->money-=BID;
+					money+=BID;
 					
 
-					if(!player->money) 
+					if(player->money<BID) 
 					{
 						player->canbid=false;break;
 					}
@@ -178,6 +175,18 @@ struct Game52
 		}
 		
 		return std::make_pair(j==1,id);
+	}
+	
+	
+	static void update(G &group)
+	{
+		for(auto &player:group)
+			update(player);
+	}
+	
+	static void update(Player_ptr &player)
+	{
+		if(player->money<BID) player->live=false;
 	}
 };
 
