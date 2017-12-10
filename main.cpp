@@ -235,7 +235,7 @@ int main(int argc,const char *argv[])
 		return showerr(err_des,errid::err_bidmoney, std::to_string(bid) + " > " +std::to_string(money));
 	
 	if(maxplayer<2)
-		return showerr(err_des,errid::err_up2player, std::to_string(maxplayer));
+		return showerr(err_des,errid::err_up2player, std::to_string(maxplayer) + " < 2");
 	if(maxplayer>MAXPLAYER)
 		return showerr(err_des,errid::err_player, std::to_string(maxplayer) + " > " +std::to_string(MAXPLAYER));
 		
