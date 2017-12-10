@@ -52,7 +52,7 @@ template <typename T,typename U>
 std::basic_ostream<T,U> & operator<< (std::basic_ostream<T,U> &os, const group_t &group)
 {
 	for(const auto &i:group)
-		os << i << std::endl;
+		os << *i << std::endl;
 	return os;
 }
 

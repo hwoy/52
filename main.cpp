@@ -25,10 +25,10 @@ struct computer final : public player_t
 		{
 			unsigned int index;
 			for(index=0;index<group.size();index++)
-				if(group[index].live) break;
+				if(group[index]->live) break;
 			
 			for(unsigned int i=index+1;i<group.size();i++)
-				if( group[i].live && t(group[i].score , group[index].score)) index=i;
+				if( group[i]->live && t(group[i]->score , group[index]->score)) index=i;
 			
 			return index;
 		}
@@ -48,11 +48,11 @@ struct computer final : public player_t
 	{
 		char ch;
 		
-		/*
-		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )].id==id &&
-			std::count_if(group.begin(),group.end(),[score=computer::score](const player_t &player)->bool { return player.live && player.canbid && player.score == score;  } )==1 )
+
+		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )]->id==id &&
+			std::count_if(group.begin(),group.end(),[](const player_ptr &player)->bool { return player->live && player->canbid;  } )==1 )
 				return 'n';
-		*/	
+
 		std::uniform_int_distribution<unsigned int> dis(1,100);
 		
 		
@@ -107,8 +107,15 @@ int main()
 {
 	deck_t deck=constructdeck(rank,suit);
 	
-	group_t group={computer(0,"Hwoy"),computer(1,"View"),computer(3,"Kung"),human(4,"Ding")};
+	group_t group;
 	
+	group.push_back(std::shared_ptr<computer>(new computer(0,"Hwoy")));
+	group.push_back(std::shared_ptr<computer>(new computer(1,"View")));
+	group.push_back(std::shared_ptr<computer>(new computer(2,"Kung")));
+	group.push_back(std::shared_ptr<computer>(new computer(3,"Ding")));
+
+
+
 	game52_t game52;
 	
 
@@ -120,12 +127,11 @@ int main()
 	
 	for(auto &player:group)
 	{
-		std::cout << "dsdsda\n";
-		if(player.live && player.canbid)
-		{std::cout << "dbbbb\n";
-			char ch=player.bid(group);
+		if(player->live && player->canbid)
+		{
+			char ch=player->bid(group);
 			
-			std::cout << player.name << ": " << ch << std::endl;
+			std::cout << player->name << ": " << ch << std::endl;
 			
 			if(ch=='y')
 			{
@@ -134,7 +140,7 @@ int main()
 				
 			else
 			{
-				player.canbid=false;
+				player->canbid=false;
 			}
 		}
 	}
@@ -144,7 +150,6 @@ int main()
 	
 	
 	game52.endphase(group,deck);
-	
 	
 	
 	return 0;

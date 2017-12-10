@@ -9,7 +9,7 @@
 #else
 	#include <string>
 #endif
-
+#include <memory>
 #include <initializer_list>
 #include "card.hpp"
 #include "52config.hpp"
@@ -44,16 +44,13 @@ struct Player
 	Player(unsigned int id,const char *name,unsigned int money=MONEY):
 	id(id),name(name),money(money),score(0),canbid(true),live(true),A(0),B(0),C(0){}
 	
-	virtual char bid(const Group<Player> &deck) const {return '\0';}
+	virtual char bid(const Group<std::shared_ptr<Player<Deck<Card> > >> &deck) const {return '\0';}
 };
 
-template <typename P=Player<Deck<Card> > >
+template <typename P=std::shared_ptr<Player<Deck<Card> > > >
 struct Group : public std::vector<P>
 {
 	typedef P Player_t;
-	Group(){}
-	
-	Group(std::initializer_list<P> l):std::vector<P>(l){}
 	
 };
 
