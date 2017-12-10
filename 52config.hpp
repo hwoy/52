@@ -5,12 +5,12 @@
 
 #define SCORE 52
 
-#define MONEY 1000
+#define MONEY 500
 #define BID 10
 
-#define _A 15
-#define _B 38
-#define _C 69
+#define _A 5
+#define _B 25
+#define _C 70
 
 #define IDYES 'y'
 #define IDNO 'n'

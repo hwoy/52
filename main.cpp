@@ -25,10 +25,10 @@ struct computer final : public player_t
 		{
 			unsigned int index;
 			for(index=0;index<group.size();index++)
-				if(group[index]->live) break;
+				if(group[index]->live && group[index]->score<=SCORE) break;
 			
 			for(unsigned int i=index+1;i<group.size();i++)
-				if( group[i]->live && t(group[i]->score , group[index]->score)) index=i;
+				if( group[i]->live && group[i]->score<=SCORE && t(group[i]->score , group[index]->score)) index=i;
 			
 			return index;
 		}
@@ -40,26 +40,31 @@ struct computer final : public player_t
 	computer(unsigned int id,const char *name):
 	player_t(id,name)
 	{
-		A = random(_A-10,_A+5);
-		B = random(_B-10,_A+20);
-		C = random(_C-5,_C+25);
+		A = random(_A-2,_A+2);
+		B = random(_B-5,_B+5);
+		C = random(_C-5,_C+20);
 	}
 	virtual char bid(const group_t &group) const 
 	{
 		char ch;
 		
 
-		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )]->id==id &&
-			std::count_if(group.begin(),group.end(),[](const player_ptr &player)->bool { return player->live && player->canbid;  } )==1 )
-				return IDNO;
-
-		std::uniform_int_distribution<unsigned int> dis(1,100);
+		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )]->id==id)
+			{
+				if(std::count_if(group.begin(),group.end(),[](const player_ptr &player)->bool { return player->live && player->canbid;  } )==1 )
+					return IDNO;
+				
+				else{
+					std::uniform_int_distribution<unsigned int> dis(1,100);
 		
 		
-		if((SCORE-score)<=2) ch=(dis(gen)<=A?IDYES:IDNO);
-		else if((SCORE-score)<=5) ch=(dis(gen)<=B?IDYES:IDNO);
-		else if((SCORE-score)<=9) ch=(dis(gen)<=C?IDYES:IDNO);
-		
+					if((SCORE-score)<=2) ch=(dis(gen)<=A?IDYES:IDNO);
+					else if((SCORE-score)<=5) ch=(dis(gen)<=B?IDYES:IDNO);
+					else if((SCORE-score)<=9) ch=(dis(gen)<=C?IDYES:IDNO);
+					else ch=IDYES;					
+				}
+			}
+			
 		else ch=IDYES;
 	
 		
@@ -130,7 +135,7 @@ int main()
 	
 	group_t group;
 	
-	group.push_back(std::shared_ptr<player_t>(new human(0,"Hwoy")));
+	group.push_back(std::shared_ptr<player_t>(new computer(0,"Hwoy")));
 	group.push_back(std::shared_ptr<player_t>(new computer(1,"View")));
 	group.push_back(std::shared_ptr<player_t>(new computer(2,"Kung")));
 	group.push_back(std::shared_ptr<player_t>(new computer(3,"Ding")));
