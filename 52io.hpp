@@ -39,7 +39,7 @@ std::basic_ostream<T,U> & operator<< (std::basic_ostream<T,U> &os, const player_
 	os << ")" << "["<< player.money <<"]";
 	if(player.live)
 	{
-		os << " ===> " << player.deck << " <==== " << player.score << (!player.canbid?"*\n":"\n");
+		os << " ===> " << player.deck << " <==== " << player.deck.size() << '[' << player.score << ']' << (!player.canbid?"*\n":"\n");
 	}
 	else{
 		os << "*\n";

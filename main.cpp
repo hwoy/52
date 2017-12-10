@@ -134,6 +134,7 @@ int main()
 	group.push_back(std::shared_ptr<player_t>(new computer(1,"View")));
 	group.push_back(std::shared_ptr<player_t>(new computer(2,"Kung")));
 	group.push_back(std::shared_ptr<player_t>(new computer(3,"Ding")));
+	group.push_back(std::shared_ptr<player_t>(new computer(4,"Lekk")));
 
 
 	
@@ -194,7 +195,10 @@ int main()
 		std::cout << "\n========= All fuckin win!! =========\n";
 		for(auto &player:group)
 			if(player->live)
+			{
+				showwinner(*player,player->deck.size()*BID);
 				player->money+=(player->deck.size()*BID);
+			}
 		}
 		
 	game52.update(group);
