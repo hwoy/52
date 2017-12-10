@@ -51,16 +51,16 @@ struct computer final : public player_t
 
 		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )]->id==id &&
 			std::count_if(group.begin(),group.end(),[](const player_ptr &player)->bool { return player->live && player->canbid;  } )==1 )
-				return 'n';
+				return IDNO;
 
 		std::uniform_int_distribution<unsigned int> dis(1,100);
 		
 		
-		if((SCORE-score)<=2) ch=(dis(gen)<=A?'y':'n');
-		else if((SCORE-score)<=5) ch=(dis(gen)<=B?'y':'n');
-		else if((SCORE-score)<=9) ch=(dis(gen)<=C?'y':'n');
+		if((SCORE-score)<=2) ch=(dis(gen)<=A?IDYES:IDNO);
+		else if((SCORE-score)<=5) ch=(dis(gen)<=B?IDYES:IDNO);
+		else if((SCORE-score)<=9) ch=(dis(gen)<=C?IDYES:IDNO);
 		
-		else ch='y';
+		else ch=IDYES;
 	
 		
 		return ch;
@@ -84,7 +84,17 @@ struct human final : public player_t
 	virtual char bid(const group_t &deck) const
 	{
 		
-		return 'y';
+		std::string str;
+		
+		do{
+			std::cout << name << "<"  <<'[' << IDYES << ']' << "Yes," << '[' << IDNO << ']' << "No," << '[' << IDQUIT << ']' << "Quit"<< ">:";
+			std::getline(std::cin,str);
+			
+			if(!str.size()) str=IDDEFAULT;
+			
+		}while((str[0]!=IDYES && str[0]!=IDNO && str[0]!=IDQUIT) || str.size()>1);
+		
+		return str[0];
 	}
 };
 
@@ -116,27 +126,28 @@ int main()
 	
 	group_t group;
 	
-	group.push_back(std::shared_ptr<computer>(new computer(0,"Hwoy")));
-	group.push_back(std::shared_ptr<computer>(new computer(1,"View")));
-	group.push_back(std::shared_ptr<computer>(new computer(2,"Kung")));
-	group.push_back(std::shared_ptr<computer>(new computer(3,"Ding")));
+	group.push_back(std::shared_ptr<player_t>(new human(0,"Hwoy")));
+	group.push_back(std::shared_ptr<player_t>(new computer(1,"View")));
+	group.push_back(std::shared_ptr<player_t>(new computer(2,"Kung")));
+	group.push_back(std::shared_ptr<player_t>(new computer(3,"Ding")));
 
 
 
 	game52_t game52;
-	
 
-	game52.shufflephase(deck);
 	
-	game52.drawphase(group,deck);
-	
-	showinfo(game52,group,deck);
 	
 	std::vector<unsigned int> vec;
 	
 	do{
 		
 		bool outloop=false;
+		
+		game52.shufflephase(deck);
+	
+		game52.drawphase(group,deck,DRAW);
+			
+		showinfo(game52,group,deck);
 	
 		do
 		{
@@ -149,12 +160,14 @@ int main()
 			
 					std::cout << player->name << ": " << ch << std::endl;
 			
-					if(ch=='y')
+					if(ch==IDYES)
 					{
 						game52.draw(player,deck);
 						std::cout << player->name << " ===> " << player->deck.back() << std::endl;
 				
 					}
+					
+					else if(ch==IDQUIT) return 0;
 				
 					else
 					{
