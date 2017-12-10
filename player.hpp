@@ -10,7 +10,6 @@
 	#include <string>
 #endif
 #include <memory>
-#include <initializer_list>
 #include "card.hpp"
 #include "52config.hpp"
 
