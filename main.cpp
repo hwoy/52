@@ -119,8 +119,12 @@ static const Card::Suit suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, 
 
 int main()
 {
-	bool iswin,nonoecanwin;
+	bool iswin,nonoecanwin,idquit=false;
 	unsigned int winindex;
+	
+	std::vector<unsigned int> vec;
+	
+	game52_t game52;
 	
 	deck_t deck=constructdeck(rank,suit);
 	
@@ -132,12 +136,6 @@ int main()
 	group.push_back(std::shared_ptr<player_t>(new computer(3,"Ding")));
 
 
-
-	game52_t game52;
-
-	
-	
-	std::vector<unsigned int> vec;
 	
 	do{
 		
@@ -167,7 +165,7 @@ int main()
 				
 					}
 					
-					else if(ch==IDQUIT) return 0;
+					else if(ch==IDQUIT) { idquit=true;break; }
 				
 					else
 					{
@@ -182,7 +180,9 @@ int main()
 				}
 			}
 
-		} while(!outloop);
+		} while(!outloop && !idquit);
+		
+	if(idquit) break;
 	
 	if(!nonoecanwin && group[vec.front()]->score<=SCORE)
 	{
@@ -201,9 +201,9 @@ int main()
 	game52.endphase(group,deck);
 	
 	std::tie(iswin,winindex)=game52.matchover(group);
-	}while(!iswin);
+	}while(!iswin && !idquit);
 	
-	showwinnerofthematch(*group[winindex]);
+	if(!idquit) showwinnerofthematch(*group[winindex]);
 	
 	
 	return 0;
