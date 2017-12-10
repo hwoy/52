@@ -43,8 +43,7 @@ struct Game52
 		Game52<G,D>::draw(group[index],deck,n);
 	}
 	
-	template <typename P>
-	void draw(P &player,D &deck,unsigned int n=1)
+	void draw(Player_t &player,D &deck,unsigned int n=1)
 	{
 		Game52<G,D>::takep(player,deck,n);
 		Game52<G,D>::score(player);
