@@ -46,7 +46,8 @@ struct computer final : public player_t
 		B = random(_B-5,_B+5);
 		C = random(_C-5,_C+20);
 	}
-	virtual char bid(const group_t &group) const 
+	
+	char bid(const group_t &group) const override
 	{
 		char ch;
 		
@@ -88,7 +89,8 @@ std::mt19937 computer::gen(system_clock::to_time_t(system_clock::now()));
 struct human final : public player_t
 {
 	human(unsigned int id,const std::string &name,unsigned int money):player_t(id,name,money){}
-	virtual char bid(const group_t &deck) const
+	
+	char bid(const group_t &deck) const override
 	{
 		
 		std::string str;
