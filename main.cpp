@@ -228,20 +228,26 @@ int main(int argc,const char *argv[])
         }
     }
 	
-	if(bid<BID)
-		return showerr(err_des,errid::err_bid, std::to_string(bid) +" < " + std::to_string(BID));
-	if(money<MONEY)
-		return showerr(err_des,errid::err_money, std::to_string(money)+" < " +std::to_string(MONEY));
-	if(bid>money)
-		return showerr(err_des,errid::err_bidmoney, std::to_string(bid) + " > " +std::to_string(money));
+	{
+		unsigned int i=0;
+		bool error=false;
 	
-	if(maxplayer<2)
-		return showerr(err_des,errid::err_up2player, std::to_string(maxplayer) + " < 2");
-	if(maxplayer>MAXPLAYER)
-		return showerr(err_des,errid::err_player, std::to_string(maxplayer) + " > " +std::to_string(MAXPLAYER));
-	if(bid*DRAW>money)
-		return showerr(err_des,errid::err_biddrawmoney, std::to_string(bid) + "*" + std::to_string(DRAW) + " > " +std::to_string(money));
+		if(bid<BID)
+			{i+=showerr(err_des,errid::err_bid, std::to_string(bid) +" < " + std::to_string(BID) + "(BID)");error=true;}
+		if(money<MONEY)
+			{i+=showerr(err_des,errid::err_money, std::to_string(money)+" < " +std::to_string(MONEY)+ "(MONEY)");error=true;}
+		if(bid>money)
+			{i+=showerr(err_des,errid::err_bidmoney, std::to_string(bid) + "(bid) > " +std::to_string(money)+ "(money)");error=true;}
+	
+		if(maxplayer<2)
+			{i+=showerr(err_des,errid::err_up2player, std::to_string(maxplayer) + " < 2");error=true;}
+		if(maxplayer>MAXPLAYER)
+			{i+=showerr(err_des,errid::err_player, std::to_string(maxplayer) + " > " +std::to_string(MAXPLAYER)+ "(MAXPLAYER)");error=true;}
+		if(bid*DRAW>money)
+			{i+=showerr(err_des,errid::err_biddrawmoney, std::to_string(bid) + "*" + std::to_string(DRAW) + "(DRAW) > " +std::to_string(money)+ "(money)");error=true;}
 		
+		if(error) return i;
+	}
 	
 	for(auto &playerPtr:group)
 		playerPtr->money=money;
@@ -341,13 +347,13 @@ static void showwinnerofthematch(const player_t &player)
 
 static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck)
 {
-	std::cout << "\nMain Deck: <" << deck.size() << ">\n";
+	std::cout << "\nMain Deck: <" << deck.size() << ">\n"
 	
-	std::cout << "Money: <" << game52.money << ">\n";
-	
-	std::cout << "BID: <" << game52.bid << ">\n\n";
-	
-	std::cout << group;
+			  << "Money: <" << game52.money << ">\n"
+			  
+			  << "BID: <" << game52.bid << ">\n\n"
+			  
+			  << group;
 	
 }
 
@@ -370,8 +376,8 @@ static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)
 
 static int showerr(const char** err_des,unsigned int id,const std::string &str)
 {
-	std::cerr << std::endl << str << std::endl;
-	std::cerr << "Error ID:" << id << " ====> " << err_des[id] << std::endl;
+	std::cerr << std::endl << str << std::endl
+			  << "Error ID:" << id << " ====> " << err_des[id] << std::endl;
 	return id+1;
 }
 
@@ -382,9 +388,15 @@ static void showhelp(const char* (&opt)[M],const char* (&opt_des)[M])
 	for(unsigned int i=0;i<M;i++)
 		std::cerr << opt[i] << " =====> " << opt_des[i] << std::endl;
 	
-	std::cerr << "\nMinimum bid(BID) = " << BID << std::endl;
-	std::cerr << "Minimum money(MONEY) = " << MONEY << std::endl;
-	std::cerr << "Maximum player(MAXPLAYER) = " << MAXPLAYER << std::endl;
+	std::cerr << "\nMinimum bid(BID) = " << BID << std::endl
+			  << "Minimum money(MONEY) = " << MONEY << std::endl
+			  << "Maximum player(MAXPLAYER) = " << MAXPLAYER << std::endl
+			  << "First Draw(DRAW) = " << DRAW << std::endl
+			  << "Goal Score(SCORE) = " << SCORE << std::endl << std::endl
+			  
+			  << "Example\n"
+			  << "52 " << opt[opt_c] << "Hwoy " << opt[opt_c] << "View\n"
+			  << "52 " << opt[opt_h] << "Hwoy " << opt[opt_c] << "View "<< opt[opt_c] << "Kung\n";
 }
 
 
