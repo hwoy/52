@@ -147,9 +147,10 @@ enum errid : unsigned int
     err_player,
 	err_bidmoney,
 	err_up2player,
-	err_empty};
+	err_empty,
+	err_biddrawmoney};
 	
-static const char* err_des[] = { "Not a number", "Invalid option", "Less than BID", "Less than MONEY", "Less than MAXPLAYER","bid more than money","up to 2 players","Empty name" };
+static const char* err_des[] = { "Not a number", "Invalid option", "Less than BID", "Less than MONEY", "Less than MAXPLAYER","bid more than money","up to 2 players","Empty name","More Bid or Less Money" };
 
 static int showerr(const char** err_des,unsigned int id,const std::string &str);
 
@@ -238,6 +239,8 @@ int main(int argc,const char *argv[])
 		return showerr(err_des,errid::err_up2player, std::to_string(maxplayer) + " < 2");
 	if(maxplayer>MAXPLAYER)
 		return showerr(err_des,errid::err_player, std::to_string(maxplayer) + " > " +std::to_string(MAXPLAYER));
+	if(bid*DRAW>money)
+		return showerr(err_des,errid::err_biddrawmoney, std::to_string(bid) + "*" + std::to_string(DRAW) + " > " +std::to_string(money));
 		
 	
 	for(auto &playerPtr:group)
