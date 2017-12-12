@@ -1,6 +1,6 @@
 ### 52 is a some kind of card game.
 - Coded by C++11
-- auto, rang-for, lambda, final, override std::any_of
+- auto, rang-for, lambda, final, override, std::any_of, std::all_of
 - Some ISO C++17 feature (std::string_view) [gcc v.7/clang v.5]
 - Unlucky, considered low speed cuz virtual function in loop
 

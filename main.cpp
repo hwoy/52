@@ -71,19 +71,16 @@ enum errid : unsigned int
 	err_empty,
 	err_biddrawmoney};
 	
-static const char* err_des[] = { "Not a number", "Invalid option", "Less than BID", "Less than MONEY", "Less than MAXPLAYER","bid more than money","up to 2 players","Empty name","More Bid or Less Money" };
+static const char* err_des[] = { "Not a positive number", "Invalid option", "Less than BID", "Less than MONEY", "Less than MAXPLAYER","bid more than money","up to 2 players","Empty name","More Bid or Less Money" };
 
 static int showerr(const char** err_des,unsigned int id,const std::string &str);
 
 static bool isdigital(const std::string &str)
-{
-	if(str.empty()) return false;
-		
-	for(const auto &i:str)
-		if(!(i>='0' && i<='9'))
-			return false;
-		
-	return true;
+{	
+	return !str.empty() && std::all_of(str.begin(),str.end(),[](char ch)->bool
+	{
+		return ch>='0' && ch <='9';
+	});
 }
 
 
