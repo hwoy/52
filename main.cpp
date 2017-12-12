@@ -31,7 +31,7 @@ template <typename T,typename F>
 T findnext(T it,T begin, T end ,const F &f);
 
 template <std::size_t M,std::size_t N>
-static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)[N]);
+static deck_t constructdeck(const rank_t (&rank)[M],const suit_t (&suit)[N]);
 
 
 static void showwinner(const player_t &player,unsigned int money);
@@ -39,12 +39,12 @@ static void showwinner(const player_t &player,unsigned int money);
 static void showwinnerofthematch(const player_t &player);
 
 
-static const Card::Rank rank[]={ {0,"A",1} , {1,"2",2} , {2,"3",3} ,\
-					  {3,"4",4} , {4,"5",5} , {5,"6",6} ,\
-					  {6,"7",7} , {7,"8",8} , {8,"9",9} ,\
-					  {9,"10",10} , {10,"K",10} , {11,"Q",10} , {12,"K",10} };
+static const rank_t rank[]={ {0,"A",1} , {1,"2",2} , {2,"3",3} ,\
+								   {3,"4",4} , {4,"5",5} , {5,"6",6} ,\
+								   {6,"7",7} , {7,"8",8} , {8,"9",9} ,\
+								   {9,"10",10} , {10,"K",10} , {11,"Q",10} , {12,"K",10} };
 					  
-static const Card::Suit suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, {3,"Clover",3}};
+static const suit_t suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, {3,"Clover",3}};
 
 
 static const char* option[] = { "-b:", "-m:", "-h:", "-c:", "-c2:", "-H" };
@@ -203,7 +203,7 @@ int main(int argc,const char *argv[])
 		do
 		{
 	
-		for(;it!=group.end();)
+		while(it!=group.end())
 			{
 				auto &player=**it;
 				
@@ -307,7 +307,7 @@ static void showinfo(const game52_t &game52,const group_t &group,const deck_t &d
 
 
 template <std::size_t M,std::size_t N>
-static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)[N])
+static deck_t constructdeck(const rank_t (&rank)[M],const suit_t (&suit)[N])
 {
 	deck_t deck;
 	

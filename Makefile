@@ -15,9 +15,11 @@ RELEASE=-O2
 
 CXXFLAGS=--std=$(STD) -pedantic -Wall
 
-.PHONY: all clean
+.PHONY: all clean debug
 
-all: $(BIND) $(BINR)
+all: $(BINR)
+
+debug: $(BIND)
 
 clean:
 	del *.o *.exe $(BIND) $(BINR) 

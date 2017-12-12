@@ -7,7 +7,11 @@
 
 typedef std::mt19937 gen_t;
 
-typedef Card card_t;
+typedef Rank rank_t;
+
+typedef Suit suit_t;
+
+typedef Card<rank_t,suit_t> card_t;
 
 typedef Deck<card_t> deck_t;
 

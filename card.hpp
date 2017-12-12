@@ -14,9 +14,6 @@
 using namespace std::chrono;
 
 
-struct Card
-{
-	
 struct Rank
 {
 	unsigned int id;
@@ -41,14 +38,21 @@ struct Suit
 
 	unsigned int priority;
 };
+
+template <typename R,typename S>
+struct Card
+{
+	typedef R Rank_t;
+	typedef S Suit_t;
+	
 	unsigned int id;
 	
-	Rank rank;
-	Suit suit;
+	R rank;
+	S suit;
 	
 	bool visible;
 	
-	Card(unsigned int id,const Rank &rank,const Suit &suit,bool visible=false):
+	Card(unsigned int id,const R &rank,const S &suit,bool visible=false):
 	id(id),rank(rank),suit(suit),visible(visible){}
 };
 
