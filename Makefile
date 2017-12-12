@@ -18,4 +18,4 @@ $(BIN): main.o
 
 
 main.o: main.cpp card.hpp player.hpp 52config.hpp 52.hpp 52io.hpp \
- 52type.hpp Copt.hpp
+ 52type.hpp Copt.hpp computer.hpp human.hpp
