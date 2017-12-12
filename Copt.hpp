@@ -1,4 +1,3 @@
-#include <cstring>
 #include <string>
 #include <utility>
 #include <vector>
@@ -65,7 +64,7 @@ public:
 
             for (auto i = param.begin(); i != param.end(); ++i) {
 
-                if (!std::strncmp(argv[j], i->c_str(), i->size())) {
+                if (*i==std::string(argv[j],argv[j]+i->size())) {
                     index = j + 1;
                     return std::make_pair(i-param.begin(), std::string(argv[j] + i->size()));
                 }
