@@ -19,6 +19,7 @@
 
 using namespace std::chrono;
 
+//========================= computer ========================= 
 struct computer final : public player_t
 {
 
@@ -47,7 +48,7 @@ struct computer final : public player_t
 		C = random(_C-5,_C+20);
 	}
 	
-	char bid(const group_t &group) const override
+	char bid(const group_t &group,const deck_t &deck) const override
 	{
 		char ch;
 		
@@ -86,11 +87,93 @@ struct computer final : public player_t
 
 std::mt19937 computer::gen(system_clock::to_time_t(system_clock::now()));
 
+//========================= computer 2 ========================= 
+
+struct computer2 final : public player_t
+{
+
+		template <typename T>
+		static unsigned int find (const group_t &group, const T &t)
+		{
+			unsigned int index;
+			for(index=0;index<group.size();index++)
+				if(group[index]->live && group[index]->score<=SCORE) break;
+			
+			for(unsigned int i=index+1;i<group.size();i++)
+				if( group[i]->live && group[i]->score<=SCORE && t(group[i]->score , group[index]->score)) index=i;
+			
+			return index;
+		}
+
+	
+	static std::mt19937 gen;
+	
+	
+	computer2(unsigned int id,const std::string &name,unsigned int money)
+	:player_t(id,name,money)
+	{
+		A=2;
+		B=2;
+		C=2;
+	}
+	
+	char bid(const group_t &group,const deck_t &deck) const override
+	{
+		char ch;
+		
+
+		if( group[find(group,[](unsigned int a,unsigned int b)->bool{return a>b;} )]->id==id)
+			{
+				if(std::count_if(group.begin(),group.end(),[](const player_ptr &player)->bool { return player->live && player->canbid;  } )==1 )
+					return IDNO;
+				
+				else{
+					std::uniform_int_distribution<unsigned int> dis(1,100);
+		
+					const unsigned int diff=(SCORE-score);
+
+					if(diff<10)
+					{
+						auto count=std::count_if(deck.begin(),deck.end(),[diff](const card_t &card)->bool
+						{
+							return card.rank.value<diff;
+						});
+						
+						ch=(dis(gen)<=((count*100)/deck.size())?IDYES:IDNO);
+	
+					}
+					
+					else{
+						ch=IDYES;
+					}
+				}
+			}
+			
+		else ch=IDYES;
+	
+		
+		return ch;
+	}
+	
+	private:
+	static unsigned int random(unsigned int a,unsigned int b)
+	{
+		std::uniform_int_distribution<> dis;
+		
+		return a+(dis(gen)%(b-a+1));
+	}
+
+};
+
+std::mt19937 computer2::gen(system_clock::to_time_t(system_clock::now()));
+
+//========================= Human ========================= 
+
 struct human final : public player_t
 {
 	human(unsigned int id,const std::string &name,unsigned int money):player_t(id,name,money){}
 	
-	char bid(const group_t &deck) const override
+	char bid(const group_t &group,const deck_t &deck) const override
 	{
 		
 		std::string str;
@@ -126,15 +209,16 @@ static const Card::Rank rank[]={ {0,"A",1} , {1,"2",2} , {2,"3",3} ,\
 static const Card::Suit suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, {3,"Clover",3}};
 
 
-static const char* option[] = { "-b:", "-m:", "-h:", "-c:", "-H" };
+static const char* option[] = { "-b:", "-m:", "-h:", "-c:", "-c2:", "-H" };
 
-static const char* option_des[] = { "-b:money <Bid money>", "-m:money <Money>", "-h:name <Human>", "-c:name <Computer>", "Help" };
+static const char* option_des[] = { "-b:money <Bid money>", "-m:money <Money>", "-h:name <Human>", "-c:name <Computer>","-c2:name <Computer2>", "Help" };
 
 enum optid : unsigned int 
 { 	opt_b,
     opt_m,
     opt_h,
     opt_c,
+	opt_c2,
     opt_H };
 	
 template <std::size_t M>
@@ -218,6 +302,12 @@ int main(int argc,const char *argv[])
 			group.push_back(std::shared_ptr<player_t>(new computer(maxplayer++,str,MONEY)));
 			
             break;
+			
+        case optid::opt_c2:
+			if(str.empty()) return showerr(err_des,errid::err_empty, option[opt_c2]+str);
+			group.push_back(std::shared_ptr<player_t>(new computer2(maxplayer++,str,MONEY)));
+			
+            break;
 
         case optid::opt_H:
             showhelp(option,option_des);
@@ -279,7 +369,7 @@ int main(int argc,const char *argv[])
 			{
 				if(playerPtr->live && playerPtr->canbid && playerPtr->money>=bid)
 				{
-					char ch=playerPtr->bid(group);
+					char ch=playerPtr->bid(group,deck);
 			
 					std::cout << playerPtr->name << ": " << ch << std::endl;
 			

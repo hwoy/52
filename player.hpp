@@ -43,7 +43,7 @@ struct Player
 	Player(unsigned int id,const std::string &name,unsigned int money=MONEY):
 	id(id),name(name),money(money),score(0),canbid(true),live(true),A(0),B(0),C(0){}
 	
-	virtual char bid(const Group<std::shared_ptr<Player<Deck<Card> > >> &deck) const {return '\0';}
+	virtual char bid(const Group<std::shared_ptr<Player<Deck<Card> > >> &group, const D &deck) const {return '\0';}
 };
 
 template <typename P=std::shared_ptr<Player<Deck<Card> > > >
