@@ -5,18 +5,20 @@
 #include "player.hpp"
 #include "52.hpp"
 
-
+typedef std::mt19937 gen_t;
 
 typedef Card card_t;
-typedef Deck<> deck_t;
 
-typedef Player<> player_t;
+typedef Deck<card_t> deck_t;
 
-typedef Group<> group_t;
+typedef Player<deck_t,gen_t> player_t;
+
+typedef Group<player_t> group_t;
 
 typedef group_t::Player_ptr player_ptr;
 
-typedef Game52<> game52_t;
+
+typedef Game52<group_t,deck_t> game52_t;
 
 
 

@@ -16,7 +16,7 @@
 #include "player.hpp"
 
 
-template <typename G=Group<>,typename D=Deck<> >
+template <typename G,typename D>
 struct Game52
 {
 	typedef typename G::Player_ptr Player_ptr;
@@ -28,9 +28,10 @@ struct Game52
 	Game52(unsigned int bid):bid(bid),money(0){}
 	
 	
-	void shufflephase(D &deck,unsigned int loop=10240)
+	template <typename Gen>
+	void shufflephase(D &deck,unsigned int loop,Gen &gen)
 	{
-		deck.shuffle(loop);
+		deck.shuffle(loop,gen);
 	}
 	
 	void drawphase(G &group,D &deck,unsigned int n=1)

@@ -2,6 +2,7 @@
 #define __52CONFIG_H__
 
 #define DRAW 3
+#define SHUFFLE 10240
 
 #define SCORE 52
 

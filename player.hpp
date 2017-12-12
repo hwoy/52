@@ -16,10 +16,12 @@
 template <typename P>
 struct Group;
 
-template <typename D=Deck<Card> >
+template <typename D,typename Gen>
 struct Player
 {
 	typedef D Deck_t;
+	typedef Gen Gen_t;
+	
 	unsigned int id;
 	
 #if __cplusplus > 201402L
@@ -43,14 +45,15 @@ struct Player
 	Player(unsigned int id,const std::string &name,unsigned int money=MONEY):
 	id(id),name(name),money(money),score(0),canbid(true),live(true),A(0),B(0),C(0){}
 	
-	virtual char bid(const Group<std::shared_ptr<Player<Deck<Card> > >> &group, const D &deck) const {return '\0';}
+	virtual char bid(const Group<Player<D,Gen>> &group, const D &deck, Gen &gen) const {return '\0';}
 };
 
-template <typename P=std::shared_ptr<Player<Deck<Card> > > >
-struct Group : public std::vector<P>
+template <typename P>
+struct Group : public std::vector<std::shared_ptr<P>>
 {
-	typedef P Player_ptr;
-	typedef typename P::element_type Player_t;
+	typedef std::shared_ptr<P> Player_ptr;
+	typedef P Player_t;
+
 	
 };
 

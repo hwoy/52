@@ -52,33 +52,31 @@ struct Suit
 	id(id),rank(rank),suit(suit),visible(visible){}
 };
 
-template <typename C=Card,typename Gen=std::mt19937>
+template <typename C>
 struct Deck: public std::list<C>
 {
 	
 	typedef C Card_t;
-	Gen gen;
 	
-	Deck(std::time_t t=system_clock::to_time_t(system_clock::now())):
-	gen(t){}
+	Deck()=default;
 	
-	Deck(const Deck<C,Gen> &deck,std::time_t t=system_clock::to_time_t(system_clock::now())):
-	std::list<C>(deck),gen(t){}
+	Deck(const Deck<C> &deck):
+	std::list<C>(deck){}
 	
-	
-	void shuffle(unsigned int loop=10240)
+	template <typename Gen>
+	void shuffle(unsigned int loop,Gen &gen)
 	{
-		std::uniform_int_distribution<>dis(0,Deck<C,Gen>::size()?Deck<C,Gen>::size()-1:0);
+		std::uniform_int_distribution<>dis(0,Deck<C>::size()?Deck<C>::size()-1:0);
 		
 		for(unsigned int i=0;i<loop;i++)
 		{
-			auto pos=Deck<C,Gen>::begin();
-			std::advance(pos,dis(Deck<C,Gen>::gen));
+			auto pos=Deck<C>::begin();
+			std::advance(pos,dis(gen));
 			
-			Deck<C,Gen>::push_back(*pos);
-			Deck<C,Gen>::erase(pos);
+			Deck<C>::push_back(*pos);
+			Deck<C>::erase(pos);
 			
-			Deck<C,Gen>::cut(Deck<C,Gen>::size()>1);
+			Deck<C>::cut(Deck<C>::size()>1);
 		}
 	}
 	
@@ -86,22 +84,22 @@ struct Deck: public std::list<C>
 	{
 		for(unsigned int i=0;i<pos;i++)
 		{
-			auto pos=Deck<C,Gen>::begin();
-			Deck<C,Gen>::push_back(*pos);
-			Deck<C,Gen>::erase(pos);
+			auto pos=Deck<C>::begin();
+			Deck<C>::push_back(*pos);
+			Deck<C>::erase(pos);
 			
 		}
 	}
 	
-	unsigned int giveall(Deck<C,Gen> &deck)
+	unsigned int giveall(Deck<C> &deck)
 	{
 		deck.splice(deck.end(),*this);
 		return deck.size();
 	}
 	
-	unsigned int give(Deck<C,Gen> &deck,unsigned int n)
+	unsigned int give(Deck<C> &deck,unsigned int n)
 	{
-		auto end=Deck<C,Gen>::end();
+		auto end=Deck<C>::end();
 		auto begin=end;
 		
 		std::advance(begin,static_cast<int>(-n));
@@ -111,12 +109,12 @@ struct Deck: public std::list<C>
 		return deck.size();
 	}
 	
-	unsigned int takeall(Deck<C,Gen> &deck)
+	unsigned int takeall(Deck<C> &deck)
 	{
 		return deck.giveall(*this);
 	}
 	
-	unsigned int take(Deck<C,Gen> &deck,unsigned int n)
+	unsigned int take(Deck<C> &deck,unsigned int n)
 	{
 		return deck.give(*this,n);
 	}

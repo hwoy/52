@@ -36,19 +36,17 @@ struct computer final : public player_t
 			return index;
 		}
 
-	
-	static std::mt19937 gen;
-	
-	
-	computer(unsigned int id,const std::string &name,unsigned int money)
+
+	computer(unsigned int id,const std::string &name,unsigned int money,gen_t &gen)
 	:player_t(id,name,money)
 	{
-		A = random(_A-2,_A+2);
-		B = random(_B-5,_B+5);
-		C = random(_C-5,_C+20);
+		A = random(_A-2,_A+2,gen);
+		B = random(_B-5,_B+5,gen);
+		C = random(_C-5,_C+20,gen);
 	}
 	
-	char bid(const group_t &group,const deck_t &deck) const override
+
+	char bid(const group_t &group,const deck_t &deck,gen_t &gen) const override
 	{
 		char ch;
 		
@@ -71,12 +69,12 @@ struct computer final : public player_t
 			
 		else ch=IDYES;
 	
-		
 		return ch;
 	}
 	
 	private:
-	static unsigned int random(unsigned int a,unsigned int b)
+	template <typename Gen>
+	static unsigned int random(unsigned int a,unsigned int b,Gen &gen)
 	{
 		std::uniform_int_distribution<> dis;
 		
@@ -85,7 +83,6 @@ struct computer final : public player_t
 
 };
 
-std::mt19937 computer::gen(system_clock::to_time_t(system_clock::now()));
 
 //========================= computer 2 ========================= 
 
@@ -106,8 +103,6 @@ struct computer2 final : public player_t
 		}
 
 	
-	static std::mt19937 gen;
-	
 	
 	computer2(unsigned int id,const std::string &name,unsigned int money)
 	:player_t(id,name,money)
@@ -117,7 +112,7 @@ struct computer2 final : public player_t
 		C=2;
 	}
 	
-	char bid(const group_t &group,const deck_t &deck) const override
+	char bid(const group_t &group,const deck_t &deck,gen_t &gen) const 
 	{
 		char ch;
 		
@@ -151,21 +146,11 @@ struct computer2 final : public player_t
 			
 		else ch=IDYES;
 	
-		
 		return ch;
 	}
 	
-	private:
-	static unsigned int random(unsigned int a,unsigned int b)
-	{
-		std::uniform_int_distribution<> dis;
-		
-		return a+(dis(gen)%(b-a+1));
-	}
 
 };
-
-std::mt19937 computer2::gen(system_clock::to_time_t(system_clock::now()));
 
 //========================= Human ========================= 
 
@@ -173,7 +158,7 @@ struct human final : public player_t
 {
 	human(unsigned int id,const std::string &name,unsigned int money):player_t(id,name,money){}
 	
-	char bid(const group_t &group,const deck_t &deck) const override
+	char bid(const group_t &group,const deck_t &deck,gen_t) const 
 	{
 		
 		std::string str;
@@ -265,6 +250,7 @@ int main(int argc,const char *argv[])
 	unsigned int id,maxplayer=0;
 	std::string str;
 	group_t group;
+	gen_t gen(system_clock::to_time_t(system_clock::now()));
 	
 	Copt opt(argc, argv, option);
 	
@@ -299,7 +285,7 @@ int main(int argc,const char *argv[])
 
         case optid::opt_c:
 			if(str.empty()) return showerr(err_des,errid::err_empty, option[opt_c]+str);
-			group.push_back(std::shared_ptr<player_t>(new computer(maxplayer++,str,MONEY)));
+			group.push_back(std::shared_ptr<player_t>(new computer(maxplayer++,str,MONEY,gen)));
 			
             break;
 			
@@ -356,7 +342,7 @@ int main(int argc,const char *argv[])
 		
 		bool outloop=false;
 		
-		game52.shufflephase(deck);
+		game52.shufflephase(deck,SHUFFLE,gen);
 	
 		game52.drawphase(group,deck,DRAW);
 			
@@ -369,7 +355,7 @@ int main(int argc,const char *argv[])
 			{
 				if(playerPtr->live && playerPtr->canbid && playerPtr->money>=bid)
 				{
-					char ch=playerPtr->bid(group,deck);
+					char ch=playerPtr->bid(group,deck,gen);
 			
 					std::cout << playerPtr->name << ": " << ch << std::endl;
 			
