@@ -129,19 +129,19 @@ int main(int argc,const char *argv[])
 
         case optid::opt_h:
 			if(str.empty()) return showerr(err_des,errid::err_empty, option[opt_h]+str);
-			group.push_back(std::shared_ptr<player_t>(new human(maxplayer++,str,MONEY)));
+			group.push_back(player_ptr(new human(maxplayer++,str,MONEY)));
 	
             break;
 
         case optid::opt_c:
 			if(str.empty()) return showerr(err_des,errid::err_empty, option[opt_c]+str);
-			group.push_back(std::shared_ptr<player_t>(new computer(maxplayer++,str,MONEY,gen)));
+			group.push_back(player_ptr(new computer(maxplayer++,str,MONEY,gen)));
 			
             break;
 			
         case optid::opt_c2:
 			if(str.empty()) return showerr(err_des,errid::err_empty, option[opt_c2]+str);
-			group.push_back(std::shared_ptr<player_t>(new computer2(maxplayer++,str,MONEY)));
+			group.push_back(player_ptr(new computer2(maxplayer++,str,MONEY)));
 			
             break;
 
