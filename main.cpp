@@ -20,7 +20,8 @@
 
 using namespace std::chrono;
 
-static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck);
+template <typename It>
+static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck,It it, It itbase);
 
 static void showwinner(const player_t &player,unsigned int money);
 
@@ -181,8 +182,11 @@ int main(int argc,const char *argv[])
 	
 	deck_t deck=constructdeck(rank,suit);
 
+	auto it=group.begin();
+	auto itbase=it;
 	
 	do{
+		it=itbase;
 		
 		bool outloop=false;
 		
@@ -190,23 +194,25 @@ int main(int argc,const char *argv[])
 	
 		game52.drawphase(group,deck,DRAW);
 			
-		showinfo(game52,group,deck);
+		showinfo(game52,group,deck,it,itbase);
 	
 		do
 		{
 	
-		for(auto &playerPtr:group)
+		for(;it!=group.end();)
 			{
-				if(playerPtr->live && playerPtr->canbid && playerPtr->money>=bid)
+				auto &player=**it;
+				
+				if(player.live && player.canbid && player.money>=bid)
 				{
-					char ch=playerPtr->bid(group,deck,gen);
+					char ch=player.bid(group,deck,gen);
 			
-					std::cout << playerPtr->name << ": " << ch << std::endl;
+					std::cout << player.name << ": " << ch << std::endl;
 			
 					if(ch==IDYES)
 					{
-						game52.draw(*playerPtr,deck);
-						std::cout << playerPtr->name << " ===> " << playerPtr->deck.back() << std::endl;
+						game52.draw(player,deck);
+						std::cout << player.name << " ===> " << player.deck.back() << std::endl;
 				
 					}
 					
@@ -214,17 +220,27 @@ int main(int argc,const char *argv[])
 				
 					else
 					{
-						playerPtr->canbid=false;
+						player.canbid=false;
 					}
+					
+					auto it2=std::find_if(it+1,group.end(),[](const player_ptr &p)->bool{
+						return p->live && p->canbid;
+											});
+			
+					if(it2==group.end()) it2=std::find_if(group.begin(),group.end(),[](const player_ptr &p)->bool{
+						return p->live && p->canbid;
+											});
 
-					showinfo(game52,group,deck);
+					showinfo(game52,group,deck,it2!=group.end()?it2:it,itbase);
 			
 					std::tie(nonoecanwin,vec)=game52.gameover(group);
 			
 					if(!(!nonoecanwin && !vec.size())) { outloop=true;break; }
 				}
+				
+				if(++it==group.end()) it=group.begin();
 			}
-
+			
 		} while(!outloop && !idquit);
 		
 	if(idquit) break;
@@ -249,6 +265,18 @@ int main(int argc,const char *argv[])
 	game52.endphase(group,deck);
 	
 	std::tie(iswin,winindex)=game52.matchover(group);
+	
+	if(!iswin && !idquit) 
+	{
+		itbase=std::find_if(itbase+1,group.end(),[](const player_ptr &p)->bool{
+		return p->live ;
+			});
+			
+		if(itbase==group.end()) itbase=std::find_if(group.begin(),group.end(),[](const player_ptr &p)->bool{
+		return p->live ;
+			});
+	}
+	
 	}while(!iswin && !idquit);
 	
 	if(!idquit) showwinnerofthematch(*group[winindex]);
@@ -267,13 +295,18 @@ static void showwinnerofthematch(const player_t &player)
 	std::cout << "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Winner of the match is " << player.name << "[" << player.money << "] $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
 }
 
-static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck)
+template <typename It>
+static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck,It it, It itbase)
 {
 	std::cout << "\nMain Deck: <" << deck.size() << ">\n"
 	
 			  << "Money: <" << game52.money << ">\n"
 			  
-			  << "BID: <" << game52.bid << ">\n\n"
+			  << "BID: <" << game52.bid << ">\n"
+			  
+			  << "Base Index: <" << (*itbase)->name << ">\n"
+			  
+			  << "Current Index: <" << (*it)->name << ">\n\n"
 			  
 			  << group;
 	
@@ -320,6 +353,7 @@ static void showhelp(const char* (&opt)[M],const char* (&opt_des)[M])
 			  << "52 " << opt[opt_c] << "Hwoy " << opt[opt_c] << "View\n"
 			  << "52 " << opt[opt_h] << "Hwoy " << opt[opt_c] << "View "<< opt[opt_c] << "Kung\n";
 }
+
 
 
 
