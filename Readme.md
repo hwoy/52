@@ -1,72 +1,85 @@
 ### 52 is a some kind of card game.
 - Coded by C++11
-- Some feature C++17 (std::string_view)
+- auto, rang-for, lambda, final, override std::any_of
+- Some ISO C++17 feature (std::string_view) [gcc v.7/clang v.5]
+- Unlucky, considered low speed cuz virtual function in loop
 
-- How to play
+### How to play
 
 ```cmd.exe
-$ 52 -b:20 -c:Hwoy -c:View
+$ 52-r -b:20 -c:voy -c2:view
 ```
 
 ```exam
 
+
 Main Deck: <46>
 Money: <120>
 BID: <20>
+Base Index: <voy>
+Current Index: <voy>
 
-Hwoy(4,28,70)[40] ===> Clover[Q] Heart[9] Diamon[2]  <==== 3[21]
+voy(5,27,80)[40] ===> Diamon[5] Spade[2] Clover[6]  <==== 3[13]
 
-View(3,22,82)[40] ===> Diamon[K] Heart[Q] Heart[7]  <==== 3[27]
+view(2,2,2)[40] ===> Clover[K] Heart[4] Heart[10]  <==== 3[24]
 
-Hwoy: y
-Hwoy ===> Diamon[5] 
+voy: y
+voy ===> Spade[9] 
 
 Main Deck: <45>
 Money: <140>
 BID: <20>
+Base Index: <voy>
+Current Index: <view>
 
-Hwoy(4,28,70)[20] ===> Clover[Q] Heart[9] Diamon[2] Diamon[5]  <==== 4[26]
+voy(5,27,80)[20] ===> Diamon[5] Spade[2] Clover[6] Spade[9]  <==== 4[22]
 
-View(3,22,82)[40] ===> Diamon[K] Heart[Q] Heart[7]  <==== 3[27]
+view(2,2,2)[40] ===> Clover[K] Heart[4] Heart[10]  <==== 3[24]
 
-View: y
-View ===> Spade[5] 
+view: y
+view ===> Heart[7] 
 
 Main Deck: <44>
 Money: <160>
 BID: <20>
+Base Index: <voy>
+Current Index: <voy>
 
-Hwoy(4,28,70)[20] ===> Clover[Q] Heart[9] Diamon[2] Diamon[5]  <==== 4[26]
+voy(5,27,80)[20] ===> Diamon[5] Spade[2] Clover[6] Spade[9]  <==== 4[22]
 
-View(3,22,82)[20] ===> Diamon[K] Heart[Q] Heart[7] Spade[5]  <==== 4[32]
+view(2,2,2)[20] ===> Clover[K] Heart[4] Heart[10] Heart[7]  <==== 4[31]
 
-Hwoy: y
-Hwoy ===> Clover[6] 
+voy: y
+voy ===> Diamon[6] 
 
 Main Deck: <43>
 Money: <180>
 BID: <20>
+Base Index: <voy>
+Current Index: <view>
 
-Hwoy(4,28,70)[0] ===> Clover[Q] Heart[9] Diamon[2] Diamon[5] Clover[6]  <==== 5[32]*
+voy(5,27,80)[0] ===> Diamon[5] Spade[2] Clover[6] Spade[9] Diamon[6]  <==== 5[28]*
 
-View(3,22,82)[20] ===> Diamon[K] Heart[Q] Heart[7] Spade[5]  <==== 4[32]
+view(2,2,2)[20] ===> Clover[K] Heart[4] Heart[10] Heart[7]  <==== 4[31]
 
-View: y
-View ===> Diamon[9] 
+view: n
 
-Main Deck: <42>
-Money: <200>
+Main Deck: <43>
+Money: <180>
 BID: <20>
+Base Index: <voy>
+Current Index: <view>
 
-Hwoy(4,28,70)[0] ===> Clover[Q] Heart[9] Diamon[2] Diamon[5] Clover[6]  <==== 5[32]*
+voy(5,27,80)[0] ===> Diamon[5] Spade[2] Clover[6] Spade[9] Diamon[6]  <==== 5[28]*
 
-View(3,22,82)[0] ===> Diamon[K] Heart[Q] Heart[7] Spade[5] Diamon[9]  <==== 5[41]*
-
-
-========= Winner is View[+200] =========
+view(2,2,2)[20] ===> Clover[K] Heart[4] Heart[10] Heart[7]  <==== 4[31]*
 
 
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Winner of the match is View[200] $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+========= Winner is view[+180] =========
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Winner of the match is view[200] $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 ```
 

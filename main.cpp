@@ -2,6 +2,7 @@
 #include <string>
 #include <random>
 #include <chrono>
+#include <algorithm>
 
 
 
@@ -23,12 +24,19 @@ using namespace std::chrono;
 template <typename It>
 static void showinfo(const game52_t &game52,const group_t &group,const deck_t &deck,It it, It itbase);
 
-static void showwinner(const player_t &player,unsigned int money);
+template <std::size_t M>
+static void showhelp(const char* (&opt)[M],const char* (&opt_des)[M]);
 
-static void showwinnerofthematch(const player_t &player);
+template <typename T,typename F>
+T findnext(T it,T begin, T end ,const F &f);
 
 template <std::size_t M,std::size_t N>
 static deck_t constructdeck(const Card::Rank (&rank)[M],const Card::Suit (&suit)[N]);
+
+
+static void showwinner(const player_t &player,unsigned int money);
+
+static void showwinnerofthematch(const player_t &player);
 
 
 static const Card::Rank rank[]={ {0,"A",1} , {1,"2",2} , {2,"3",3} ,\
@@ -50,9 +58,6 @@ enum optid : unsigned int
     opt_c,
 	opt_c2,
     opt_H };
-	
-template <std::size_t M>
-static void showhelp(const char* (&opt)[M],const char* (&opt_des)[M]);
 	
 	
 enum errid : unsigned int 
@@ -182,11 +187,10 @@ int main(int argc,const char *argv[])
 	
 	deck_t deck=constructdeck(rank,suit);
 
-	auto it=group.begin();
-	auto itbase=it;
+	auto itbase=group.begin();
 	
 	do{
-		it=itbase;
+		auto it=itbase;
 		
 		bool outloop=false;
 		
@@ -223,13 +227,8 @@ int main(int argc,const char *argv[])
 						player.canbid=false;
 					}
 					
-					auto it2=std::find_if(it+1,group.end(),[](const player_ptr &p)->bool{
-						return p->live && p->canbid;
-											});
-			
-					if(it2==group.end()) it2=std::find_if(group.begin(),group.end(),[](const player_ptr &p)->bool{
-						return p->live && p->canbid;
-											});
+					auto it2=findnext(it,group.begin(),group.end(),[](const player_ptr &p)->bool{
+						return p->live && p->canbid;});
 
 					showinfo(game52,group,deck,it2!=group.end()?it2:it,itbase);
 			
@@ -267,15 +266,9 @@ int main(int argc,const char *argv[])
 	std::tie(iswin,winindex)=game52.matchover(group);
 	
 	if(!iswin && !idquit) 
-	{
-		itbase=std::find_if(itbase+1,group.end(),[](const player_ptr &p)->bool{
+		itbase=findnext(itbase,group.begin(),group.end(),[](const player_ptr &p)->bool{
 		return p->live ;
 			});
-			
-		if(itbase==group.end()) itbase=std::find_if(group.begin(),group.end(),[](const player_ptr &p)->bool{
-		return p->live ;
-			});
-	}
 	
 	}while(!iswin && !idquit);
 	
@@ -350,10 +343,19 @@ static void showhelp(const char* (&opt)[M],const char* (&opt_des)[M])
 			  << "Goal Score(SCORE) = " << SCORE << std::endl << std::endl
 			  
 			  << "Example\n"
-			  << "52 " << opt[opt_c] << "Hwoy " << opt[opt_c] << "View\n"
-			  << "52 " << opt[opt_h] << "Hwoy " << opt[opt_c] << "View "<< opt[opt_c] << "Kung\n";
+			  << "52-r " << opt[opt_c] << "Hwoy " << opt[opt_c] << "View\n"
+			  << "52-r " << opt[opt_h] << "Hwoy " << opt[opt_c] << "View "<< opt[opt_c] << "Kung\n";
 }
 
 
+template <typename T,typename F>
+T findnext(T it,T begin, T end ,const F &f)
+{
+	it=std::find_if(it+1,end,f);
+			
+	if(it==end) it=std::find_if(begin,end,f);
+			
+	return it;
+}
 
 
