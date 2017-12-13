@@ -28,7 +28,7 @@ template <std::size_t M>
 static void showhelp(const char* (&opt)[M],const char* (&opt_des)[M]);
 
 template <typename T,typename F>
-T findnext(T it,T begin, T end ,const F &f);
+static T findnext(T it,T begin, T end ,const F &f);
 
 template <std::size_t M,std::size_t N>
 static deck_t constructdeck(const rank_t (&rank)[M],const suit_t (&suit)[N]);
@@ -346,7 +346,7 @@ static void showhelp(const char* (&opt)[M],const char* (&opt_des)[M])
 
 
 template <typename T,typename F>
-T findnext(T it,T begin, T end ,const F &f)
+static T findnext(T it,T begin, T end ,const F &f)
 {
 	it=std::find_if(it+1,end,f);
 			
