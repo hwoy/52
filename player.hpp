@@ -49,9 +49,9 @@ struct Player
 };
 
 template <typename P>
-struct Group : public std::vector<std::shared_ptr<P>>
+struct Group : public std::vector<std::unique_ptr<P>>
 {
-	typedef std::shared_ptr<P> Player_ptr;
+	typedef std::unique_ptr<P> Player_ptr;
 	typedef P Player_t;
 
 	
