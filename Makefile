@@ -13,7 +13,7 @@ DEBUG=-g
 
 RELEASE=-O2
 
-CXXFLAGS=--std=$(STD) -pedantic -Wall
+CXXFLAGS=--std=$(STD) -pedantic -Wall -Wextra
 
 .PHONY: all clean debug
 
