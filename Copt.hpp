@@ -63,7 +63,7 @@ struct Copt :public std::vector<str_t>{
 
             for (auto i = begin(); i != end(); ++i) {
 
-                if (*i==str_t(argv[j],argv[j]+i->size())) {
+                if (*i==str_t(argv[j],i->size())) {
                     index = j + 1;
                     return std::make_pair(i-begin(), str_t(argv[j] + i->size()));
                 }

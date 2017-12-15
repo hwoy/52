@@ -33,8 +33,8 @@ $(BINR): main-$(R).o
 
 main-$(D).o: main.cpp card.hpp player.hpp 52config.hpp 52.hpp 52io.hpp \
  52type.hpp Copt.hpp computer.hpp human.hpp
-	$(CXX) -c $(DEBUG) -o main-$(D).o main.cpp
+	$(CXX) -c $(DEBUG) $(CXXFLAGS) -o main-$(D).o main.cpp
 	
 main-$(R).o: main.cpp card.hpp player.hpp 52config.hpp 52.hpp 52io.hpp \
  52type.hpp Copt.hpp computer.hpp human.hpp
-	$(CXX) -c $(RELEASE) -o main-$(R).o main.cpp
+	$(CXX) -c $(RELEASE) $(CXXFLAGS) -o main-$(R).o main.cpp
