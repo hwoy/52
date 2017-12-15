@@ -24,6 +24,14 @@ typedef group_t::Player_ptr player_ptr;
 
 typedef Game52<group_t,deck_t> game52_t;
 
+#if __cplusplus > 201402L
+	#include <string_view>
+	typedef std::string_view string_t;
+#else
+	#include <string>
+typedef std::string string_t;
+#endif
+
 
 
 #endif

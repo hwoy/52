@@ -2,38 +2,41 @@
 #include <utility>
 #include <vector>
 
-#ifndef _COPT_H
-#define _COPT_H
+#ifndef _COPT_H__
+#define _COPT_H__
 
-class Copt {
-public:
+#if __cplusplus > 201402L
+	#include <string_view>
+	typedef std::string_view str_t;
+#else
+	#include <string>
+typedef std::string str_t;
+#endif
+
+
+struct Copt :public std::vector<str_t>{
+
     int argc;
-    unsigned int index;
+	const char** argv;
     unsigned int start;
-    const char** argv;
+	unsigned int index;
 
-    std::vector<std::string> param;
 
     enum ID : unsigned int { END = -2U,
         OTHER = -1U };
+		
+	Copt()=default;
 
 	template <typename iterator>
     Copt(int argc, const char** argv, iterator bparam, iterator eparam, unsigned int start = 1)
-        : argc(argc)
-        , index(start)
-        , start(start)
-        , argv(argv)
-        , param(bparam,eparam)
+	:std::vector<str_t>(bparam,eparam),
+	argc(argc),argv(argv),start(start),index(start)
     {
     }
 	
 	template <typename T,std::size_t N>
     Copt(int argc, const char** argv, const T (&param)[N], unsigned int start = 1)
-        : argc(argc)
-        , index(start)
-        , start(start)
-        , argv(argv)
-        , param(param,param+N)
+        : Copt(argc,argv,param, param+N, start)
     {
     }
 
@@ -42,7 +45,7 @@ public:
     {
         this->argc = argc;
         this->argv = argv;
-        this->param.assign(bparam, eparam);
+        assign(bparam, eparam);
         this->index = start;
         this->start = start;
     }
@@ -50,32 +53,28 @@ public:
 	template <typename T,std::size_t N>	
     void init(int argc, const char** argv, const T (&param)[N], unsigned int start = 1)
     {
-        this->argc = argc;
-        this->argv = argv;
-        this->param.assign(param, param+N);
-        this->index = start;
-        this->start = start;
+		init(argc,argv,param,param+N,start);
     }
 
-    std::pair<unsigned int, std::string> action()
+    std::pair<unsigned int, str_t> action()
     {
 
         for (unsigned int j = index; j < reinterpret_cast<unsigned int&>(argc); j++) {
 
-            for (auto i = param.begin(); i != param.end(); ++i) {
+            for (auto i = begin(); i != end(); ++i) {
 
-                if (*i==std::string(argv[j],argv[j]+i->size())) {
+                if (*i==str_t(argv[j],argv[j]+i->size())) {
                     index = j + 1;
-                    return std::make_pair(i-param.begin(), std::string(argv[j] + i->size()));
+                    return std::make_pair(i-begin(), str_t(argv[j] + i->size()));
                 }
             }
 
             index = j + 1;
 
-            return std::make_pair(ID::OTHER, std::string(argv[j]));
+            return std::make_pair(ID::OTHER, str_t(argv[j]));
         }
 
-        return std::make_pair(ID::END, std::string());
+        return std::make_pair(ID::END, str_t());
     }
 };
 #endif
