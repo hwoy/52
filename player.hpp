@@ -9,6 +9,7 @@
 #else
 	#include <string>
 #endif
+
 #include <memory>
 #include "card.hpp"
 #include "52config.hpp"

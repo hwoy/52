@@ -1,6 +1,13 @@
 #ifndef __52TYPE_H__
 #define __52TYPE_H__
 
+#if __cplusplus > 201402L
+	#include <string_view>
+#else
+	#include <string>
+#endif
+
+
 #include "card.hpp"
 #include "player.hpp"
 #include "52.hpp"

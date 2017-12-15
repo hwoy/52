@@ -5,6 +5,12 @@
 #include <random>
 #include <algorithm>
 
+#if __cplusplus > 201402L
+	#include <string_view>
+#else
+	#include <string>
+#endif
+
 
 
 #include "card.hpp"
