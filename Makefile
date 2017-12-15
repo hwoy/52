@@ -7,7 +7,7 @@ R=r
 BIND=52-$(D)
 BINR=52-$(R)
 
-STD=c++11
+STD=c++17
 
 DEBUG=-g
 

@@ -34,7 +34,15 @@ struct computer final : public player_t
 		}
 
 
-	computer(unsigned int id,const std::string &name,unsigned int money,gen_t &gen)
+	computer(unsigned int id,\
+	
+#if __cplusplus > 201402L
+	const std::string_view &name
+#else
+	const std::string &name
+#endif
+	
+	,unsigned int money,gen_t &gen)
 	:player_t(id,name,money)
 	{
 		A = random(_A-2,_A+2,gen);
@@ -101,7 +109,15 @@ struct computer2 final : public player_t
 
 	
 	
-	computer2(unsigned int id,const std::string &name,unsigned int money)
+	computer2(unsigned int id,
+	
+#if __cplusplus > 201402L
+	const std::string_view &name
+#else
+	const std::string &name
+#endif
+
+	,unsigned int money)
 	:player_t(id,name,money)
 	{
 		A=2;

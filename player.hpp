@@ -42,7 +42,16 @@ struct Player
 	
 	D deck;
 	
-	Player(unsigned int id,const std::string &name,unsigned int money=MONEY):
+	Player(unsigned int id,
+	
+#if __cplusplus > 201402L
+	const std::string_view &name
+#else
+	const std::string &name
+#endif
+	
+	
+	,unsigned int money=MONEY):
 	id(id),name(name),money(money),score(0),canbid(true),live(true),A(0),B(0),C(0){}
 	
 	virtual char bid(const Group<Player<D,Gen>> &group, const D &deck, Gen &gen) const {return '\0';}

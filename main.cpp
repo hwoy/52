@@ -75,7 +75,7 @@ static const char* err_des[] = { "Not a positive number", "Invalid option", "Les
 
 static int showerr(const char** err_des,unsigned int id,const std::string &str);
 
-static bool isdigital(const std::string &str)
+static bool isdigital(const string_t &str)
 {	
 	return !str.empty() && std::all_of(str.begin(),str.end(),[](char ch)->bool
 	{

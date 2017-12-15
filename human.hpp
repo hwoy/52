@@ -17,7 +17,15 @@
 
 struct human final : public player_t
 {
-	human(unsigned int id,const std::string &name,unsigned int money):player_t(id,name,money){}
+	human(unsigned int id,
+	
+#if __cplusplus > 201402L
+	const std::string_view &name
+#else
+	const std::string &name
+#endif
+	
+	,unsigned int money):player_t(id,name,money){}
 	
 	char bid(const group_t &group,const deck_t &deck,gen_t &) const override
 	{
