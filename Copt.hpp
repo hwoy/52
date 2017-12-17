@@ -6,7 +6,7 @@
 
 
 #include <utility>
-#include <vector>
+#include <list>
 
 #ifndef _COPT_H__
 #define _COPT_H__
@@ -20,7 +20,7 @@ typedef std::string str_t;
 #endif
 
 
-struct Copt :public std::vector<str_t>{
+struct Copt :public std::list<str_t>{
 
     int argc;
 	const char** argv;
@@ -35,7 +35,7 @@ struct Copt :public std::vector<str_t>{
 
 	template <typename iterator>
     Copt(int argc, const char** argv, iterator bparam, iterator eparam, unsigned int start = 1)
-	:std::vector<str_t>(bparam,eparam),
+	:std::list<str_t>(bparam,eparam),
 	argc(argc),argv(argv),start(start),index(start)
     {
     }
@@ -71,7 +71,7 @@ struct Copt :public std::vector<str_t>{
 
                 if (*i==str_t(argv[j],i->size())) {
                     index = j + 1;
-                    return std::make_pair(i-begin(), str_t(argv[j] + i->size()));
+                    return std::make_pair(std::distance(begin(),i), str_t(argv[j] + i->size()));
                 }
             }
 

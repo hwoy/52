@@ -106,7 +106,7 @@ struct Deck: public std::list<C>
 		auto end=Deck<C>::end();
 		auto begin=end;
 		
-		std::advance(begin,static_cast<int>(-n));
+		std::advance(begin,-reinterpret_cast<int&>(n));
 		
 		deck.splice(deck.end(),*this,begin,end);
 		

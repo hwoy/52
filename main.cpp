@@ -42,7 +42,7 @@ static void showwinnerofthematch(const player_t &player);
 static const rank_t rank[]={ {0,"A",1} , {1,"2",2} , {2,"3",3} ,\
 								   {3,"4",4} , {4,"5",5} , {5,"6",6} ,\
 								   {6,"7",7} , {7,"8",8} , {8,"9",9} ,\
-								   {9,"10",10} , {10,"K",10} , {11,"Q",10} , {12,"K",10} };
+								   {9,"10",10} , {10,"J",10} , {11,"Q",10} , {12,"K",10} };
 					  
 static const suit_t suit[]={{0,"Spade",0} , {1,"Heart",1} , {2,"Diamon",2}, {3,"Clover",3}};
 
